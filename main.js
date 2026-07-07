@@ -100,7 +100,7 @@ return'<div class="rp"><details><summary><div class="rp-h"><div class="rp-hl"><d
 // 角色（含好感度）
 function gChars(items){
 var h='<div class="rp"><details><summary><div class="rp-h"><div class="rp-hl"><div class="dot dr"></div><span class="rp-ttl">附近角色</span></div><span class="rp-arr">▾</span></div></summary><div class="rp-bd" style="padding-top:6px">';
-for(var i=0;i<items.length;i++){var c=items[i];h+='<div class="cc">'+avHTML(c.name,'cav')+'<div class="ci"><div class="cnr"><span class="cn">'+esc(c.name)+'</span><span class="cs">'+esc(c.state)+'</span>'+(c.favor?'<span class="cfav">♡'+esc(c.favor)+'</span>':'')+'</div><div class="co">'+esc(c.thought)+'</div></div></div>';}
+for(var i=0;i<items.length;i++){var c=items[i];var favNum=parseInt(c.favor)||0;var favPct=Math.min(favNum,100);h+='<div class="cc">'+avHTML(c.name,'cav')+'<div class="ci"><div class="cnr"><span class="cn">'+esc(c.name)+'</span><span class="cs">'+esc(c.state)+'</span></div>'+(c.favor?'<div class="cfav-bar"><span class="cfav-label">好感度</span><div class="cfav-track"><div class="cfav-fill" style="width:'+favPct+'%"></div></div><span class="cfav-num">'+favNum+'/100</span></div>':'')+'<div class="co">'+esc(c.thought)+'</div></div></div>';}
 return h+'</div></details></div>';}
 
 function gMsgs(items,nsfw){var n=items.length;var titleText=nsfw?'勿扰模式':'消息通知';var h='<div class="rp"><details><summary><div class="rp-h"><div class="rp-hl"><div class="dot dw"></div><span class="rp-ttl">'+titleText+'</span></div><div class="rp-hr">'+(nsfw?'':'<span class="mbdg">'+n+'</span>')+'<span class="rp-arr">▾</span></div></div></summary><div class="rp-bd">';if(nsfw)h+='<div class="msg-nsfw">'+esc(nsfw)+'</div>';else if(!n)h+='<div class="msg-nsfw">暂无新消息</div>';else for(var i=0;i<items.length;i++){var sp=items[i].split('~');h+='<div class="mi"><div class="mh"><span class="ms">'+esc(sp[0]||'')+'</span><span class="mt">'+esc(sp[1]||'')+'</span></div><div class="mc">'+esc(sp[2]||'')+'</div></div>';}return h+'</div></details></div>';}
@@ -145,7 +145,7 @@ html+=gMsgs(msgs,nsfw);
 html+=gLive(lB,lT,lV,lOff);
 R.innerHTML=html;
 // 应用字体颜色和字号
-var fc=LS.getItem('wre_fc');if(fc)document.documentElement.style.setProperty('--fc',fc);
+var fc=LS.getItem('wre_fc');if(fc){document.documentElement.style.setProperty('--fc',fc);document.documentElement.style.setProperty('--tp',fc);document.documentElement.style.setProperty('--ts',fc.replace(/[\d.]+\)$/,function(m){return(parseFloat(m)*0.7).toFixed(2)+')';}));document.documentElement.style.setProperty('--td',fc.replace(/[\d.]+\)$/,function(m){return(parseFloat(m)*0.45).toFixed(2)+')';}));}
 var fs=LS.getItem('wre_fs');if(fs)document.documentElement.style.fontSize=fs+'px';
 var sc=LS.getItem('wre_color');if(sc){var r2=parseInt(sc.slice(1,3),16),g2=parseInt(sc.slice(3,5),16),b2=parseInt(sc.slice(5,7),16);document.documentElement.style.setProperty('--go','rgba('+r2+','+g2+','+b2+',.88)');document.documentElement.style.setProperty('--gd','rgba('+r2+','+g2+','+b2+',.35)');}
 // 绑定
