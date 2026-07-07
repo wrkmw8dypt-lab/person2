@@ -281,7 +281,7 @@ details[open]>.sub-h .sub-arr{transform:rotate(180deg);}
 .app-i:active{transform:scale(.88);opacity:.7;}
 .app-i-icon{width:48px;height:48px;border-radius:13px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);}
 .app-i-icon svg{width:24px;height:24px;}
-.app-i-label{font-size:.5em;color:var(--ts);text-align:center;letter-spacing:.3px;}
+.app-i-label{font-size:.5em;color:rgba(195,185,168,.68);text-align:center;letter-spacing:.3px;}
 .app-page{position:absolute;inset:0;background:rgba(14,12,20,.96);display:none;flex-direction:column;overflow:hidden;z-index:5;}
 .app-page.active{display:flex;}
 .app-nav{display:flex;align-items:center;padding:10px 14px 6px;gap:8px;flex-shrink:0;}
