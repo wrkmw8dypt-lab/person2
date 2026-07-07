@@ -11,8 +11,65 @@ function doTime(bs){var td=null;try{td=JSON.parse(LS.getItem('wt')||'null')}catc
 function avBind(el,tx,inp,nm){var s=LS.getItem('wa_'+nm);if(s&&el){el.src=s;el.style.display='block';if(tx)tx.style.display='none';}inp.onchange=function(){var f=this.files[0];if(!f)return;var r=new FileReader();r.onload=function(ev){var img=new Image();img.onload=function(){var c=document.createElement('canvas'),w=img.width,h=img.height;if(w>400){h*=400/w;w=400}if(h>520){w*=520/h;h=520}c.width=w;c.height=h;var ctx=c.getContext('2d');ctx.drawImage(img,0,0,w,h);var d=c.toDataURL('image/jpeg',0.88);try{LS.setItem('wa_'+nm,d)}catch(e){}if(el){el.src=d;el.style.display='block'}if(tx)tx.style.display='none';};img.src=ev.target.result;};r.readAsDataURL(f);};}
 function avHTML(nm,cls){var id=uid();return'<div class="'+cls+'" onclick="document.getElementById(\''+id+'\').click()"><img id="'+id+'-i" src="" style="display:none"><span id="'+id+'-t" class="cavt">'+esc(String(nm).charAt(0))+'</span></div><input type="file" accept="image/*" style="display:none" id="'+id+'" data-av="'+esc(nm)+'">';}
 function gSB(t,loc){var l=String(loc||'').split('|');return'<div class="sb5"><div class="sb5-t">'+esc(t.h)+'</div><div class="sb5-sep"></div><div class="sb5-right"><div class="sb5-row"><span class="sb5-era">'+esc(t.e)+'</span><span class="sb5-date">'+esc(t.m)+'</span></div><div class="sb5-row"><span class="sb5-loc">'+esc(l[0]||'')+'</span></div>'+(l[1]?'<div class="sb5-row"><span class="sb5-wx">'+esc(l[1])+'</span></div>':'')+'</div></div>';}
-function gTK(data){var p=String(data||'').split('|');var colors=['red','blue','gold','purple','green'];var color=colors.indexOf(p[0])>=0?p.shift():colors[Math.floor(Math.random()*colors.length)];var title=p.shift()||'系统';if(!p.length)return'<div class="tkt '+color+'"><div class="tkt-bar"></div><div class="tkt-hd"><span class="tkt-title">'+esc(title)+'</span></div><div class="tkt-bd"><div class="tkt-plain">'+esc(title)+'</div></div><div class="tkt-tear"></div></div>';var bd='';for(var i=0;i<p.length;i++){var row=p[i];if(row.indexOf('◈')===0){var idx=row.indexOf(':');if(idx<0)idx=row.indexOf(':');if(idx>0)bd+='<div class="tkt-row"><span class="tkt-diamond">◈</span><span class="tkt-key">'+esc(row.slice(1,idx).trim())+'：</span><span class="tkt-val">'+esc(row.slice(idx+1).trim())+'</span></div>';else bd+='<div class="tkt-row"><span class="tkt-diamond">◈</span><span class="tkt-val">'+esc(row.slice(1).trim())+'</span></div>';}else bd+='<div class="tkt-plain">'+esc(row)+'</div>';}return'<div class="tkt '+color+'"><div class="tkt-bar"></div><div class="tkt-hd"><span class="tkt-title">'+esc(title)+'</span></div><div class="tkt-bd">'+bd+'</div><div class="tkt-tear"></div></div>';}
-function gChoices(items){var h='<div class="act-wrap"><div class="act-t">· 行动参考 ·</div>';for(var i=0;i<items.length;i++)h+='<input type="radio" name="act" id="ac'+i+'" class="act-chk"><label for="ac'+i+'" class="act-btn" data-copy="'+esc(items[i].tag+': '+items[i].desc)+'"><span class="act-bdg">✓ 已复制</span><span class="act-tag">[ '+esc(items[i].tag)+' ]</span><div class="act-desc">'+esc(items[i].desc)+'</div></label>';return h+'</div>';}
+function gTK(data){
+var p=String(data||'').split('|');
+var colors=['red','blue','gold','purple','green'];
+var color=colors.indexOf(p[0])>=0?p.shift():colors[Math.floor(Math.random()*colors.length)];
+var title=p.shift()||'系统';
+if(!p.length){
+return'<div class="tkt '+color+'"><div class="tkt-bar"></div><div class="tkt-hd"><span class="tkt-title">'+esc(title)+'</span></div><div class="tkt-bd"><div class="tkt-plain">'+esc(title)+'</div></div><div class="tkt-tear"></div></div>';
+}
+var hasKey=false;
+for(var i=0;i<p.length;i++){if(p[i].indexOf('◈')===0){hasKey=true;break;}}
+if(!hasKey){
+var plainText=p.join(' ');
+return'<div class="tkt '+color+'"><div class="tkt-bar"></div><div class="tkt-hd"><span class="tkt-title">'+esc(title)+'</span></div><div class="tkt-bd"><div class="tkt-plain" style="line-height:2;letter-spacing:.3px">'+esc(plainText)+'</div></div><div class="tkt-tear"></div></div>';
+}
+var bd='';
+var keyIdx=0;
+var accents=[
+{bg:'rgba(255,255,255,.03)',bl:''},
+{bg:'rgba(255,255,255,.02)',bl:'border-left:2px solid rgba(255,255,255,.06);padding-left:10px;margin-left:2px;'},
+{bg:'',bl:''},
+{bg:'rgba(255,255,255,.025)',bl:'border-left:2px solid rgba(255,255,255,.05);padding-left:10px;margin-left:2px;'}
+];
+for(var i=0;i<p.length;i++){
+var row=p[i];
+if(row.indexOf('◈')===0){
+  var idx=row.indexOf(':');if(idx<0)idx=row.indexOf(':');
+  var accent=accents[keyIdx%accents.length];
+  var rowStyle='padding:6px 8px;border-radius:5px;margin-bottom:4px;';
+  if(accent.bg)rowStyle+='background:'+accent.bg+';';
+  if(accent.bl)rowStyle+=accent.bl;
+  if(idx>0){
+    var key=row.slice(1,idx).trim();
+    var val=row.slice(idx+1).trim();
+    var parts=val.split(',');
+    if(parts.length>1){
+      bd+='<div style="'+rowStyle+'"><div class="tkt-row" style="margin-bottom:4px"><span class="tkt-diamond">◈</span><span class="tkt-key">'+esc(key)+'</span></div>';
+      for(var j=0;j<parts.length;j++){
+        var sub=parts[j].trim();
+        var si=sub.indexOf('~');
+        if(si>0){
+          bd+='<div style="display:flex;align-items:flex-start;gap:6px;padding:3px 0 3px 18px"><span style="font-size:.7em;color:var(--td);flex-shrink:0">·</span><span style="font-size:.75em;font-weight:500;color:var(--fc);flex-shrink:0">'+esc(sub.slice(0,si).trim())+'</span><span style="font-size:.72em;color:var(--ts);line-height:1.6;flex:1">'+esc(sub.slice(si+1).trim())+'</span></div>';
+        }else{
+          bd+='<div style="padding:2px 0 2px 18px;font-size:.72em;color:var(--ts);line-height:1.6"><span style="color:var(--td);margin-right:4px">·</span>'+esc(sub)+'</div>';
+        }
+      }
+      bd+='</div>';
+    }else{
+      bd+='<div style="'+rowStyle+'"><div class="tkt-row"><span class="tkt-diamond">◈</span><span class="tkt-key">'+esc(key)+'：</span><span class="tkt-val">'+esc(val)+'</span></div></div>';
+    }
+  }else{
+    bd+='<div style="'+rowStyle+'"><div class="tkt-row"><span class="tkt-diamond">◈</span><span class="tkt-val">'+esc(row.slice(1).trim())+'</span></div></div>';
+  }
+  keyIdx++;
+}else{
+  bd+='<div class="tkt-plain">'+esc(row)+'</div>';
+}
+}
+return'<div class="tkt '+color+'"><div class="tkt-bar"></div><div class="tkt-hd"><span class="tkt-title">'+esc(title)+'</span></div><div class="tkt-bd">'+bd+'</div><div class="tkt-tear"></div></div>';
+}
 function makeTask(raw,type){if(!raw)return'';var q=String(raw).split('~'),cls=type==='支线'?'s':'',pg=q[1]||'',pct=0;if(pg.indexOf('/')>0){var pp=pg.split('/');pct=Math.min(100,(parseInt(pp[0])||0)/(parseInt(pp[1])||1)*100);}else pct=parseInt(pg)||0;return'<div class="ti '+cls+'"><div class="tr1"><span class="ttag">'+type+'</span><span class="tnm">'+esc(q[0]||'')+'</span></div><div class="tr2"><div class="tpt"><div class="tpf" style="width:'+pct+'%"></div></div><span class="tnum">'+esc(pg)+'</span></div><div class="trw">▸ '+esc(q[2]||'')+'</div>'+(q[3]?'<div class="tev">'+esc(q[3])+'</div>':'')+'</div>';}
 
 // 面板（不含任务）
