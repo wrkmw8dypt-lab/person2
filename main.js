@@ -11,6 +11,7 @@ function doTime(bs){var td=null;try{td=JSON.parse(LS.getItem('wt')||'null')}catc
 function avBind(el,tx,inp,nm){var s=LS.getItem('wa_'+nm);if(s&&el){el.src=s;el.style.display='block';if(tx)tx.style.display='none';}inp.onchange=function(){var f=this.files[0];if(!f)return;var r=new FileReader();r.onload=function(ev){var img=new Image();img.onload=function(){var c=document.createElement('canvas'),w=img.width,h=img.height;if(w>400){h*=400/w;w=400}if(h>520){w*=520/h;h=520}c.width=w;c.height=h;var ctx=c.getContext('2d');ctx.drawImage(img,0,0,w,h);var d=c.toDataURL('image/jpeg',0.88);try{LS.setItem('wa_'+nm,d)}catch(e){}if(el){el.src=d;el.style.display='block'}if(tx)tx.style.display='none';};img.src=ev.target.result;};r.readAsDataURL(f);};}
 function avHTML(nm,cls){var id=uid();return'<div class="'+cls+'" onclick="document.getElementById(\''+id+'\').click()"><img id="'+id+'-i" src="" style="display:none"><span id="'+id+'-t" class="cavt">'+esc(String(nm).charAt(0))+'</span></div><input type="file" accept="image/*" style="display:none" id="'+id+'" data-av="'+esc(nm)+'">';}
 function gSB(t,loc){var l=String(loc||'').split('|');return'<div class="sb5"><div class="sb5-t">'+esc(t.h)+'</div><div class="sb5-sep"></div><div class="sb5-right"><div class="sb5-row"><span class="sb5-era">'+esc(t.e)+'</span><span class="sb5-date">'+esc(t.m)+'</span></div><div class="sb5-row"><span class="sb5-loc">'+esc(l[0]||'')+'</span></div>'+(l[1]?'<div class="sb5-row"><span class="sb5-wx">'+esc(l[1])+'</span></div>':'')+'</div></div>';}
+
 function gTK(data){
 var p=String(data||'').split('|');
 var colors=['red','blue','gold','purple','green'];
@@ -25,8 +26,7 @@ if(!hasKey){
 var plainText=p.join(' ');
 return'<div class="tkt '+color+'"><div class="tkt-bar"></div><div class="tkt-hd"><span class="tkt-title">'+esc(title)+'</span></div><div class="tkt-bd"><div class="tkt-plain" style="line-height:2;letter-spacing:.3px">'+esc(plainText)+'</div></div><div class="tkt-tear"></div></div>';
 }
-var bd='';
-var keyIdx=0;
+var bd='';var keyIdx=0;
 var accents=[
 {bg:'rgba(255,255,255,.03)',bl:''},
 {bg:'rgba(255,255,255,.02)',bl:'border-left:2px solid rgba(255,255,255,.06);padding-left:10px;margin-left:2px;'},
@@ -53,7 +53,7 @@ if(row.indexOf('◈')===0){
         if(si>0){
           bd+='<div style="display:flex;align-items:flex-start;gap:6px;padding:3px 0 3px 18px"><span style="font-size:.7em;color:var(--td);flex-shrink:0">·</span><span style="font-size:.75em;font-weight:500;color:var(--fc);flex-shrink:0">'+esc(sub.slice(0,si).trim())+'</span><span style="font-size:.72em;color:var(--ts);line-height:1.6;flex:1">'+esc(sub.slice(si+1).trim())+'</span></div>';
         }else{
-          bd+='<div style="padding:2px 0 2px 18px;font-size:.72em;color:var(--ts);line-height:1.6"><span style="color:var(--td);margin-right:4px">·</span>'+esc(sub)+'</div>';
+          bd+='<div style="padding:2px 0 2px 18px;font-size:.72em;color:var(--fc);line-height:1.6"><span style="color:var(--td);margin-right:4px">·</span>'+esc(sub)+'</div>';
         }
       }
       bd+='</div>';
@@ -70,14 +70,16 @@ if(row.indexOf('◈')===0){
 }
 return'<div class="tkt '+color+'"><div class="tkt-bar"></div><div class="tkt-hd"><span class="tkt-title">'+esc(title)+'</span></div><div class="tkt-bd">'+bd+'</div><div class="tkt-tear"></div></div>';
 }
+
+function gChoices(items){var h='<div class="act-wrap"><div class="act-t">· 行动参考 ·</div>';for(var i=0;i<items.length;i++)h+='<input type="radio" name="act" id="ac'+i+'" class="act-chk"><label for="ac'+i+'" class="act-btn" data-copy="'+esc(items[i].tag+': '+items[i].desc)+'"><span class="act-bdg">✓ 已复制</span><span class="act-tag">[ '+esc(items[i].tag)+' ]</span><div class="act-desc">'+esc(items[i].desc)+'</div></label>';return h+'</div>';}
+
 function makeTask(raw,type){if(!raw)return'';var q=String(raw).split('~'),cls=type==='支线'?'s':'',pg=q[1]||'',pct=0;if(pg.indexOf('/')>0){var pp=pg.split('/');pct=Math.min(100,(parseInt(pp[0])||0)/(parseInt(pp[1])||1)*100);}else pct=parseInt(pg)||0;return'<div class="ti '+cls+'"><div class="tr1"><span class="ttag">'+type+'</span><span class="tnm">'+esc(q[0]||'')+'</span></div><div class="tr2"><div class="tpt"><div class="tpf" style="width:'+pct+'%"></div></div><span class="tnum">'+esc(pg)+'</span></div><div class="trw">▸ '+esc(q[2]||'')+'</div>'+(q[3]?'<div class="tev">'+esc(q[3])+'</div>':'')+'</div>';}
 
-// 面板（不含任务）
 function gPanel(data){
 var p=String(data||'').split('|');
 var rank=p[0]||'未知',title=p[1]||'',comment=p[2]||'',equipsRaw=p[3]||'',attrsRaw=p[4]||'';
 var allSlots=['发型','饰品','妆容','上衣','下装','连衣裙','袜类','鞋子','特殊'];
-var allAttrs=['智力','魅力','体质','力量','敏捷','魔力','意志','幸运'];
+var allAttrs=['智力','魅力','体质','力量','敏捷','意志','幸运'];
 var equipMap={},attrMap={},savedAttrs={};
 try{savedAttrs=JSON.parse(LS.getItem('wattr')||'{}')}catch(x){}
 var eL=equipsRaw.split(',');for(var i=0;i<eL.length;i++){if(!eL[i])continue;var s=eL[i].split('~');if(s[0])equipMap[s[0]]=s[1]||'无';}
@@ -88,7 +90,6 @@ for(var i=0;i<allSlots.length;i++){var sl=allSlots[i],vl=equipMap[sl];if(!vl)con
 for(var i=0;i<allAttrs.length;i++){var nm=allAttrs[i],ad=attrMap[nm],v,dH='';if(ad){v=ad.v;if(ad.d&&ad.d!=='0'){var cl=ad.d.charAt(0)==='+'?'plus':'minus';dH='<span class="av-delta '+cl+'">'+esc(ad.d)+'</span>';}}else{v=savedAttrs[nm]!==undefined?savedAttrs[nm]:'-';}var bw=(typeof v==='number')?Math.min(v,100):0;attrH+='<div class="ai"><span class="al">'+esc(nm)+'</span><div class="ab"><div class="af" style="width:'+bw+'%"></div></div><span class="av">'+esc(String(v))+'</span>'+dH+'</div>';}
 return'<div class="rp"><details><summary><div class="rp-h"><div class="rp-hl"><div class="dot dg"></div><span class="rp-ttl">个人面板</span></div><span class="rp-arr">▾</span></div></summary><div class="rp-bd"><div class="pf-top"><div class="pf-img" onclick="document.getElementById(\''+id+'\').click()"><img id="'+id+'-i" src="" style="display:none"><div id="'+id+'-p" class="pf-ph"><span class="pf-pht">点击<br>导入立绘</span></div></div><input type="file" accept="image/*" style="display:none" id="'+id+'" data-av="__USER__"><div class="pf-info"><div class="attr-rk">[ '+esc(rank)+' ] '+esc(title)+'</div>'+(comment?'<div class="attr-cm">'+esc(comment)+'</div>':'')+'</div></div>'+(equipH?'<div class="equip-section"><div class="pf-section-title">装备</div><div class="equip-zone">'+equipH+'</div></div>':'')+'<div class="pf-section-title">属性</div><div class="attr-grid">'+attrH+'</div></div></details></div>';}
 
-// 任务（独立模块）
 function gTasks(mQ,sQ){
 if(!mQ&&!sQ)return'';
 var prevMQ=LS.getItem('wre_mq')||'';var prevSQ=LS.getItem('wre_sq')||'';
@@ -97,7 +98,6 @@ if(mQ)LS.setItem('wre_mq',mQ);if(sQ)LS.setItem('wre_sq',sQ);
 var tBadge=hasUpdate?'<span class="sub-badge">✦ 更新</span>':'';
 return'<div class="rp"><details><summary><div class="rp-h"><div class="rp-hl"><div class="dot dj"></div><span class="rp-ttl">系统任务</span></div><div class="rp-hr">'+tBadge+'<span class="rp-arr">▾</span></div></div></summary><div class="rp-bd">'+makeTask(mQ,'主线')+makeTask(sQ,'支线')+'</div></details></div>';}
 
-// 角色（含好感度）
 function gChars(items){
 var h='<div class="rp"><details><summary><div class="rp-h"><div class="rp-hl"><div class="dot dr"></div><span class="rp-ttl">附近角色</span></div><span class="rp-arr">▾</span></div></summary><div class="rp-bd" style="padding-top:6px">';
 for(var i=0;i<items.length;i++){var c=items[i];var favNum=parseInt(c.favor)||0;var favPct=Math.min(favNum,100);h+='<div class="cc">'+avHTML(c.name,'cav')+'<div class="ci"><div class="cnr"><span class="cn">'+esc(c.name)+'</span><span class="cs">'+esc(c.state)+'</span></div>'+(c.favor?'<div class="cfav-bar"><span class="cfav-label">好感度</span><div class="cfav-track"><div class="cfav-fill" style="width:'+favPct+'%"></div></div><span class="cfav-num">'+favNum+'/100</span></div>':'')+'<div class="co">'+esc(c.thought)+'</div></div></div>';}
@@ -134,7 +134,7 @@ else if(b.t==='论坛')html+=gForum(b.d);
 else if(b.t==='文风'){LS.setItem('wre_style_active',b.d);}
 else if(b.t==='通讯录'){var cl=b.d.split('|');cl.forEach(function(c){var pp=c.split('~');if(pp[0]){var cd=JSON.parse(LS.getItem('wre_contacts')||'{"groups":{"默认":[]}}');var exists=false;Object.keys(cd.groups).forEach(function(g){cd.groups[g].forEach(function(x){if(x.name===pp[0])exists=true;});});if(!exists){cd.groups['默认'].push({name:pp[0],desc:pp[1]||'',yaml:'name: '+pp[0]+'\ndesc: '+(pp[1]||'')});LS.setItem('wre_contacts',JSON.stringify(cd));}}});}
 else if(b.t==='成就'){var al=b.d.split('|');al.forEach(function(a){var pp=a.split('~');if(pp[0]){var achs=JSON.parse(LS.getItem('wre_achv')||'[]');var exists=achs.some(function(x){return x.name===pp[0]});if(!exists){achs.push({badge:pp[2]||'🏆',name:pp[0],desc:pp[1]||'',time:time.m+' '+time.h});LS.setItem('wre_achv',JSON.stringify(achs));}}});}
-else if(b.t==='背包更新'){try{var bag=JSON.parse(LS.getItem('wre_bag')||'[]');var ops=b.d.split(',');ops.forEach(function(op){var pp=op.split('~');if(pp[0]&&pp[1]){var found=bag.find(function(x){return x.name===pp[0]});if(found)found.amt=pp[1];else bag.push({name:pp[0],amt:pp[1]});}});LS.setItem('wre_bag',JSON.stringify(bag));}catch(x){}}
+else if(b.t==='背包更新'){try{var bag=JSON.parse(LS.getItem('wre_bag')||'[{"name":"积分","amt":"170"},{"name":"属性点","amt":"0"}]');var ops=b.d.split(',');ops.forEach(function(op){var pp=op.split('~');if(pp[0]&&pp[1]){var found=bag.find(function(x){return x.name===pp[0]});if(found)found.amt=pp[1];else bag.push({name:pp[0],amt:pp[1]});}});LS.setItem('wre_bag',JSON.stringify(bag));}catch(x){}}
 else if(b.t==='记账'){try{var lg=JSON.parse(LS.getItem('wre_ledger')||'[]');var ops=b.d.split(',');ops.forEach(function(op){var pp=op.split('~');lg.push({type:pp[0]==='+'?'inc':'exp',name:pp[1]||'',time:time.h,amt:(pp[0]==='+'?'+':'-')+(pp[2]||'')});});LS.setItem('wre_ledger',JSON.stringify(lg));}catch(x){}}
 }
 if(choices.length)html+=gChoices(choices);
@@ -144,11 +144,9 @@ if(chars.length)html+=gChars(chars);
 html+=gMsgs(msgs,nsfw);
 html+=gLive(lB,lT,lV,lOff);
 R.innerHTML=html;
-// 应用字体颜色和字号
 var fc=LS.getItem('wre_fc');if(fc){document.documentElement.style.setProperty('--fc',fc);document.documentElement.style.setProperty('--tp',fc);document.documentElement.style.setProperty('--ts',fc.replace(/[\d.]+\)$/,function(m){return(parseFloat(m)*0.7).toFixed(2)+')';}));document.documentElement.style.setProperty('--td',fc.replace(/[\d.]+\)$/,function(m){return(parseFloat(m)*0.45).toFixed(2)+')';}));}
 var fs=LS.getItem('wre_fs');if(fs)document.documentElement.style.fontSize=fs+'px';
 var sc=LS.getItem('wre_color');if(sc){var r2=parseInt(sc.slice(1,3),16),g2=parseInt(sc.slice(3,5),16),b2=parseInt(sc.slice(5,7),16);document.documentElement.style.setProperty('--go','rgba('+r2+','+g2+','+b2+',.88)');document.documentElement.style.setProperty('--gd','rgba('+r2+','+g2+','+b2+',.35)');}
-// 绑定
 var avs=document.querySelectorAll('input[data-av]');for(var i=0;i<avs.length;i++){var inp=avs[i],nm=inp.getAttribute('data-av');var img=document.getElementById(inp.id+'-i');var tx=document.getElementById(inp.id+'-t')||document.getElementById(inp.id+'-p');if(img)avBind(img,tx,inp,nm);}
 var btns=document.querySelectorAll('.act-btn');for(var i=0;i<btns.length;i++){btns[i].onclick=function(){var t=this.getAttribute('data-copy');if(t){cp(t);toast('✓ 已复制');}};}
 var likes=document.querySelectorAll('.cmt-like');for(var i=0;i<likes.length;i++){likes[i].onclick=function(e){e.stopPropagation();var was=this.classList.contains('liked');var m=this.textContent.match(/\d+/);var n=m?parseInt(m[0]):0;this.classList.toggle('liked');this.textContent=was?'♡ '+(n-1):'♡ '+(n+1);};}
@@ -176,6 +174,6 @@ var appDefs=[
 var grid=document.getElementById('appGrid');
 appDefs.forEach(function(a){var d=document.createElement('div');d.className='app-i';d.onclick=function(){openApp(a.id)};d.innerHTML='<div class="app-i-icon"><svg viewBox="0 0 26 26" width="24" height="24">'+a.svg.replace(/CL/g,a.c)+'</svg></div><div class="app-i-label">'+a.label+'</div>';grid.appendChild(d);});
 var saved=LS.getItem('wre_icon');
-if(saved){var el=document.getElementById('orbBtn');var svgs=JSON.parse(LS.getItem('wre_icon_svg')||'null');if(svgs)el.innerHTML=svgs;else{var icons={'apple':'🍎','huawei':'🔴','samsung':'💎','xiaomi':'🟠','cat':'🐱','dog':'🐶','rabbit':'🐰','bear':'🐻','star':'⭐'};if(icons[saved])el.textContent=icons[saved];}}
+if(saved){var el=document.getElementById('orbBtn');var svgs=JSON.parse(LS.getItem('wre_icon_svg')||'null');if(svgs)el.innerHTML=svgs;}
 })();
 })();
