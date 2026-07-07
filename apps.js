@@ -4,7 +4,6 @@ function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').
 function toast(m){var t=document.getElementById('T');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('show')},2000)}
 function cp(t){try{navigator.clipboard.writeText(t)}catch(x){var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');document.body.removeChild(a)}}
 
-// ═══ 设置APP ═══
 window.init_settings=function(){
 var body=document.getElementById('settingsBody');
 var presets=['#c8c0b2','#b49b8c','#91a59b','#b4a58c','#919bb3','#9b96aa','#96aab3','#aa9f9b','#a59b91','#788c78','#be827d','#829abe','#a591b9','#c8b491','#91b4aa','#b28c8c'];
@@ -25,7 +24,6 @@ window.updBlur=function(){var v=document.getElementById('blurS').value;document.
 window.chgFs=function(d){var f=parseInt(LS.getItem('wre_fs')||'14');f=Math.max(11,Math.min(18,f+d));LS.setItem('wre_fs',String(f));document.getElementById('fsV').textContent=f+'px';document.documentElement.style.fontSize=f+'px';};
 window.loadWp=function(inp){var f=inp.files[0];if(!f)return;var r=new FileReader();r.onload=function(e){try{LS.setItem('wre_wp',e.target.result)}catch(x){}document.getElementById('wpPrev').innerHTML='<img src="'+e.target.result+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">';};r.readAsDataURL(f);};
 
-// ═══ 衣橱APP ═══
 window.init_wardrobe=function(){
 var body=document.getElementById('wardrobeBody');
 var tab=LS.getItem('wre_wdtab')||'古风';
@@ -50,7 +48,6 @@ window.rollWdCol=function(slot){var colors=window.WD_COLORS||['白','黑','灰',
 window.rollWdName=function(slot){var tab=LS.getItem('wre_wdtab')||'古风';var WD=window.WD_DATA;if(!WD||!WD[tab])return;var items=WD[tab][slot];if(!items)return;var pick=items[Math.floor(Math.random()*items.length)];var sel=JSON.parse(LS.getItem('wre_wdsel')||'{}');sel[slot]=pick;LS.setItem('wre_wdsel',JSON.stringify(sel));init_wardrobe();};
 window.copyWd=function(){var sel=JSON.parse(LS.getItem('wre_wdsel')||'{}');var col=JSON.parse(LS.getItem('wre_wdcol')||'{}');var keys=Object.keys(sel);if(!keys.length)return;cp(keys.map(function(k){return k+'~'+(col[k]||'')+sel[k];}).join(','));toast('✓ 已复制');};
 
-// ═══ 通讯录APP ═══
 window.init_contacts=function(){
 var data=JSON.parse(LS.getItem('wre_contacts')||'{"groups":{"默认":[]}}');
 var body=document.getElementById('contactsBody');
@@ -74,7 +71,6 @@ window.closeCtM=function(){document.getElementById('ctModalWrap').innerHTML='';}
 window.saveCt=function(){var nm=(document.getElementById('ctNN')||{}).value||'';nm=nm.trim();if(!nm)return;var desc=((document.getElementById('ctND')||{}).value||'').trim();var grp=((document.getElementById('ctNG')||{}).value||'').trim()||'默认';var data=JSON.parse(LS.getItem('wre_contacts')||'{"groups":{"默认":[]}}');if(!data.groups[grp])data.groups[grp]=[];data.groups[grp].push({name:nm,desc:desc,yaml:'name: '+nm+'\ndesc: '+desc});LS.setItem('wre_contacts',JSON.stringify(data));closeCtM();init_contacts();};
 window.confirmDelCt=function(g,i){if(!confirm('确定删除？'))return;var data=JSON.parse(LS.getItem('wre_contacts')||'{"groups":{"默认":[]}}');data.groups[g].splice(i,1);LS.setItem('wre_contacts',JSON.stringify(data));init_contacts();};
 
-// ═══ 吃什么APP ═══
 window.init_food=function(){
 var body=document.getElementById('foodBody');
 var FD=window.FOOD_DATA;if(!FD){body.innerHTML='加载中...';return;}
@@ -91,7 +87,6 @@ function renderFdList(){var el=document.getElementById('fList');if(!el)return;va
 window.swFdTab=function(t){LS.setItem('wre_foodtab',t);init_food();};
 window.rollFd=function(){var FD=window.FOOD_DATA||{};var all=[];Object.keys(FD).forEach(function(c){FD[c].forEach(function(d){all.push({cuisine:c,dish:d});});});if(!all.length)return;var pick=all[Math.floor(Math.random()*all.length)];document.getElementById('fRC').textContent=pick.cuisine;document.getElementById('fRN').textContent=pick.dish;};
 
-// ═══ 指令集APP ═══
 window.init_cmd=function(){
 var cmds=[
 {cmd:'/rnd',name:'随机事件',desc:'随机触发恋爱/日常/脑洞事件'},
@@ -109,11 +104,9 @@ var cmds=[
 {cmd:'【虚拟触摸】',name:'虚拟触摸',desc:'选择部位触发角色反应'},
 {cmd:'【退出世界】',name:'退出/进入',desc:'离开或进入世界'}
 ];
-doc```javascript
-ument.getElementById('cmdBody').innerHTML='<div style="font-size:.6em;color:var(--ts);line-height:1.5;margin-bottom:8px;padding:8px 10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:8px">使用 <span style="color:var(--go)">【指令】</span> 或 <span style="color:var(--go)">/斜线</span> 触发功能</div>'+cmds.map(function(c){return'<div style="display:flex;align-items:flex-start;gap:6px;padding:6px 8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:7px;margin-bottom:3px"><span style="font-family:var(--ffm);font-size:.5em;padding:2px 5px;border-radius:3px;background:rgba(200,192,178,.6);color:rgba(12,10,18,.85);flex-shrink:0;margin-top:1px">'+c.cmd+'</span><div style="flex:1"><div style="font-size:.65em;color:var(--tp)">'+c.name+'</div><div style="font-size:.5em;color:var(--td)">'+c.desc+'</div></div></div>';}).join('');
+document.getElementById('cmdBody').innerHTML='<div style="font-size:.6em;color:var(--ts);line-height:1.5;margin-bottom:8px;padding:8px 10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:8px">使用 <span style="color:var(--go)">【指令】</span> 或 <span style="color:var(--go)">/斜线</span> 触发功能</div>'+cmds.map(function(c){return'<div style="display:flex;align-items:flex-start;gap:6px;padding:6px 8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:7px;margin-bottom:3px"><span style="font-family:var(--ffm);font-size:.5em;padding:2px 5px;border-radius:3px;background:rgba(200,192,178,.6);color:rgba(12,10,18,.85);flex-shrink:0;margin-top:1px">'+c.cmd+'</span><div style="flex:1"><div style="font-size:.65em;color:var(--tp)">'+c.name+'</div><div style="font-size:.5em;color:var(--td)">'+c.desc+'</div></div></div>';}).join('');
 };
 
-// ═══ 背包APP ═══
 window.init_bag=function(){
 var bag=JSON.parse(LS.getItem('wre_bag')||'[{"name":"积分","amt":"170"},{"name":"属性点","amt":"0"}]');
 var ledger=JSON.parse(LS.getItem('wre_ledger')||'[{"type":"inc","name":"开局初始","time":"09:00","amt":"+170"}]');
@@ -131,7 +124,6 @@ body.innerHTML=h;
 };
 window.swBagTab=function(t){LS.setItem('wre_bagtab',t);init_bag();};
 
-// ═══ 文风APP ═══
 window.init_style=function(){
 var styles=[
 {n:'古风古韵',d:'古典白话为底，辞藻华丽对仗意境'},
@@ -162,7 +154,6 @@ body.innerHTML='<div style="background:rgba(255,255,255,.03);border:1px solid rg
 };
 window.pickStyle=function(n){LS.setItem('wre_style',n);init_style();toast('已切换: '+n);};
 
-// ═══ 换图标APP ═══
 window.init_icon=function(){
 var icons=[
 {id:'apple',label:'Apple',e:'🍎'},
@@ -180,7 +171,6 @@ document.getElementById('iconBody').innerHTML='<div style="font-size:.52em;color
 };
 window.pickIcon=function(id,e){LS.setItem('wre_icon',id);document.getElementById('orbBtn').textContent=e;init_icon();toast('图标已更换');};
 
-// ═══ 成就APP ═══
 window.init_achieve=function(){
 var achs=JSON.parse(LS.getItem('wre_achv')||'[]');
 var body=document.getElementById('achieveBody');
