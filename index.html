@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>WRE</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="nb"><div class="nb-o a"></div><div class="nb-o b"></div></div>
+<div class="uni" id="R"></div>
+<div class="act-toast" id="T"></div>
+<div class="orb" id="orbBtn" onclick="togglePhone()">🍎</div>
+<div class="phone-wrap" id="phoneWrap">
+<div class="phone">
+<div class="ph-island"></div>
+<div class="ph-top"><span class="ph-time" id="phTime">9:41</span><span class="ph-batt">100%</span></div>
+<div class="ph-screen">
+<div class="home" id="homeScreen">
+<div class="home-clock"><div class="home-t" id="homeT">9:41</div><div class="home-d" id="homeD"></div></div>
+<div class="app-grid" id="appGrid"></div>
+</div>
+<div class="app-page" id="pg-settings">
+<div class="app-nav"><div class="app-back" onclick="goHome()"><svg viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6l4 4" stroke="rgba(255,255,255,.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="nav-title">设置</div></div>
+<div class="app-body" id="settingsBody"></div>
+</div>
+<div class="app-page" id="pg-wardrobe">
+<div class="app-nav"><div class="app-back" onclick="goHome()"><svg viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6l4 4" stroke="rgba(255,255,255,.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="nav-title">衣橱</div></div>
+<div class="app-body" id="wardrobeBody"></div>
+</div>
+<div class="app-page" id="pg-contacts">
+<div class="app-nav"><div class="app-back" onclick="goHome()"><svg viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6l4 4" stroke="rgba(255,255,255,.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="nav-title">通讯录</div><div style="font-size:.6em;color:var(--go);cursor:pointer" onclick="openAddContact()">+添加</div></div>
+<div class="app-body" id="contactsBody"></div>
+<div id="ctDetailWrap"></div>
+<div id="ctModalWrap"></div>
+<div id="ctConfirmWrap"></div>
+</div>
+<div class="app-page" id="pg-food">
+<div class="app-nav"><div class="app-back" onclick="goHome()"><svg viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6l4 4" stroke="rgba(255,255,255,.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="nav-title">吃什么</div></div>
+<div class="app-body" id="foodBody"></div>
+</div>
+<div class="app-page" id="pg-cmd">
+<div class="app-nav"><div class="app-back" onclick="goHome()"><svg viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6l4 4" stroke="rgba(255,255,255,.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="nav-title">指令集</div></div>
+<div class="app-body" id="cmdBody"></div>
+</div>
+<div class="app-page" id="pg-bag">
+<div class="app-nav"><div class="app-back" onclick="goHome()"><svg viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6l4 4" stroke="rgba(255,255,255,.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="nav-title">背包</div></div>
+<div class="app-body" id="bagBody"></div>
+</div>
+<div class="app-page" id="pg-style">
+<div class="app-nav"><div class="app-back" onclick="goHome()"><svg viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6l4 4" stroke="rgba(255,255,255,.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="nav-title">文风</div></div>
+<div class="app-body" id="styleBody"></div>
+</div>
+<div class="app-page" id="pg-icon">
+<div class="app-nav"><div class="app-back" onclick="goHome()"><svg viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6l4 4" stroke="rgba(255,255,255,.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="nav-title">换图标</div></div>
+<div class="app-body" id="iconBody"></div>
+</div>
+<div class="app-page" id="pg-achieve">
+<div class="app-nav"><div class="app-back" onclick="goHome()"><svg viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6l4 4" stroke="rgba(255,255,255,.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="nav-title">成就</div></div>
+<div class="app-body" id="achieveBody"></div>
+</div>
+</div>
+</div>
+</div>
+<script src="data.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
