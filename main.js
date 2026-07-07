@@ -189,7 +189,6 @@ h+='</div></details>';
 return h+'</div>';
 }
 
-// ═══ 主渲染函数 ═══
 function render(){
 var bs=parse();
 if(!bs.length){R.innerHTML='<div style="text-align:center;padding:40px;color:var(--td);font-size:.85em">等待数据接入...</div>';return;}
@@ -222,21 +221,17 @@ if(chars.length)html+=gChars(chars);
 html+=gMsgs(msgs,nsfw);
 html+=gLive(lB,lT,lV,lOff);
 R.innerHTML=html;
-// 绑定头像
-var avs=docu```javascript
-ment.querySelectorAll('input[data-av]');
+var avs=document.querySelectorAll('input[data-av]');
 for(var i=0;i<avs.length;i++){
 var inp=avs[i],nm=inp.getAttribute('data-av');
 var img=document.getElementById(inp.id+'-i');
 var tx=document.getElementById(inp.id+'-t')||document.getElementById(inp.id+'-p');
 if(img)avBind(img,tx,inp,nm);
 }
-// 绑定行动参考复制
 var btns=document.querySelectorAll('.act-btn');
 for(var i=0;i<btns.length;i++){
 btns[i].onclick=function(){var t=this.getAttribute('data-copy');if(t){cp(t);toast('✓ 已复制');}};
 }
-// 绑定评论点赞
 var likes=document.querySelectorAll('.cmt-like');
 for(var i=0;i<likes.length;i++){
 likes[i].onclick=function(e){e.stopPropagation();var was=this.classList.contains('liked');var m=this.textContent.match(/\d+/);var n=m?parseInt(m[0]):0;this.classList.toggle('liked');this.textContent=was?('♡ '+(n-1)):('♡ '+(n+1));};
@@ -246,16 +241,13 @@ likes[i].onclick=function(e){e.stopPropagation();var was=this.classList.contains
 window.addEventListener('hashchange',render);
 render();
 
-// ═══ 小手机：基础 ═══
 window.togglePhone=function(){document.getElementById('phoneWrap').classList.toggle('open')};
 window.goHome=function(){document.querySelectorAll('.app-page').forEach(function(p){p.classList.remove('active')})};
 window.openApp=function(id){window.goHome();var el=document.getElementById('pg-'+id);if(el)el.classList.add('active');if(window['init_'+id])window['init_'+id]();};
 
-// 时钟
 function upClock(){var d=new Date(),h=d.getHours(),m=d.getMinutes(),t=(h<10?'0':'')+h+':'+(m<10?'0':'')+m;document.getElementById('phTime').textContent=t;document.getElementById('homeT').textContent=t;var days=['周日','周一','周二','周三','周四','周五','周六'];document.getElementById('homeD').textContent=days[d.getDay()]+' · '+(d.getMonth()+1)+'月'+d.getDate()+'日';}
 upClock();setInterval(upClock,30000);
 
-// APP图标渲染
 var appDefs=[
 {id:'settings',label:'设置',svg:'<circle cx="13" cy="13" r="4" stroke="CL" stroke-width="1.5" fill="none"/><path d="M13 3v2M13 21v2M3 13h2M21 13h2M5.6 5.6l1.5 1.5M18.9 18.9l1.5 1.5M5.6 20.4l1.5-1.5M18.9 7.1l1.5-1.5" stroke="CL" stroke-width="1.3" stroke-linecap="round"/>',c:'rgba(160,155,150,.5)'},
 {id:'wardrobe',label:'衣橱',svg:'<path d="M9 4c0 0-4 2-4 6v11h16V10c0-4-4-6-4-6" stroke="CL" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M9 4c1 2 2 3 4 3s3-1 4-3" stroke="CL" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M13 10v11M8 14h10" stroke="CL" stroke-width="1.2" stroke-linecap="round" fill="none"/>',c:'rgba(175,155,140,.5)'},
