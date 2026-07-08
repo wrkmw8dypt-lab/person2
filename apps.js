@@ -11,14 +11,40 @@ var cc=LS.getItem('wre_color')||'#c8c0b2';
 var cf=parseInt(LS.getItem('wre_fs')||'14');
 var phColor=LS.getItem('wre_ph_color')||'rgba(255,255,255,.9)';
 var phColors=[
-{c:'rgba(255,255,255,.9)',n:'白'},
+{c:'rgba(255,255,255,.95)',n:'纯白'},
 {c:'rgba(240,235,222,.9)',n:'暖白'},
+{c:'rgba(245,240,230,.9)',n:'象牙'},
+{c:'rgba(220,215,200,.85)',n:'宣纸'},
 {c:'rgba(210,182,128,.9)',n:'金'},
+{c:'rgba(195,180,145,.85)',n:'琥珀'},
 {c:'rgba(180,140,210,.9)',n:'紫'},
 {c:'rgba(128,195,165,.9)',n:'青'},
 {c:'rgba(210,145,138,.9)',n:'粉'},
-{c:'rgba(130,170,220,.9)',n:'蓝'}
+{c:'rgba(130,170,220,.9)',n:'蓝'},
+{c:'rgba(180,175,165,.8)',n:'烟灰'},
+{c:'rgba(140,138,135,.75)',n:'深灰'},
+{c:'rgba(100,98,95,.85)',n:'炭灰'},
+{c:'rgba(60,58,55,.9)',n:'墨'},
+{c:'rgba(30,28,25,.95)',n:'黑'}
 ];
+var phInnerColors=[
+{c:'rgba(255,255,255,.95)',n:'纯白'},
+{c:'rgba(240,235,222,.91)',n:'暖白'},
+{c:'rgba(245,240,230,.9)',n:'象牙'},
+{c:'rgba(220,215,200,.85)',n:'宣纸'},
+{c:'rgba(200,195,180,.8)',n:'麻色'},
+{c:'rgba(210,182,128,.85)',n:'金'},
+{c:'rgba(180,140,210,.85)',n:'紫'},
+{c:'rgba(128,195,165,.85)',n:'青'},
+{c:'rgba(210,145,138,.85)',n:'粉'},
+{c:'rgba(130,170,220,.85)',n:'蓝'},
+{c:'rgba(180,175,165,.75)',n:'烟灰'},
+{c:'rgba(140,138,135,.7)',n:'深灰'},
+{c:'rgba(100,98,95,.85)',n:'炭灰'},
+{c:'rgba(60,58,55,.9)',n:'墨'},
+{c:'rgba(30,28,25,.95)',n:'黑'}
+];
+var phInnerColor=LS.getItem('wre_ph_inner_color')||'rgba(240,235,222,.91)';
 body.innerHTML=''
 +'<div style="font-size:11px;color:rgba(160,152,140,.6);letter-spacing:2px;margin-bottom:5px">状态栏颜色</div>'
 +'<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:10px 12px;margin-bottom:8px">'
@@ -28,7 +54,7 @@ body.innerHTML=''
 +'<div id="presetRow" style="display:flex;gap:4px;overflow-x:auto;padding:2px 0;-webkit-overflow-scrolling:touch"></div></div>'
 +'<div style="font-size:11px;color:rgba(160,152,140,.6);letter-spacing:2px;margin-bottom:5px">字体颜色</div>'
 +'<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:10px 12px;margin-bottom:8px">'
-+'<div id="fcRow" style="display:flex;gap:6px;overflow-x:auto;padding:2px 0;-webkit-overflow-scrolling:touch;min-height:26px"></div></div>'
++'<div id="fcRow" style="display:flex;gap:6px;overflow-x:auto;padding:2px 0;-webkit-overflow-scrolling:touch;min-height:26px;scrollbar-width:none"></div></div>'
 +'<div style="font-size:11px;color:rgba(160,152,140,.6);letter-spacing:2px;margin-bottom:5px">字号</div>'
 +'<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:10px 12px;margin-bottom:8px">'
 +'<div style="display:flex;align-items:center;gap:8px">'
@@ -39,7 +65,9 @@ body.innerHTML=''
 +'<div style="font-size:11px;color:rgba(160,152,140,.6);letter-spacing:2px;margin-bottom:5px">手机主题</div>'
 +'<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:10px 12px;margin-bottom:8px">'
 +'<div style="font-size:10px;color:rgba(160,152,140,.5);margin-bottom:5px">封面字体颜色</div>'
-+'<div id="phColorRow" style="display:flex;gap:6px;margin-bottom:8px"></div>'
++'<div id="phColorRow" style="display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:8px;scrollbar-width:none"></div>'
++'<div style="font-size:10px;color:rgba(160,152,140,.5);margin:5px 0 5px">内页字体颜色</div>'
++'<div id="phInnerColorRow" style="display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:8px;scrollbar-width:none"></div>'
 +'<div style="font-size:10px;color:rgba(160,152,140,.5);margin-bottom:5px">封面壁纸</div>'
 +'<div id="wpPrev" onclick="document.getElementById(\'wpInp\').click()" style="width:100%;height:45px;border-radius:6px;border:1px dashed rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;position:relative"><span style="font-size:10px;color:rgba(160,152,140,.5)">点击导入</span></div>'
 +'<input type="file" accept="image/*" id="wpInp" style="display:none" onchange="loadWp(this)">'
@@ -92,6 +120,19 @@ applyPhColor(f.c);
 };
 phcRow.appendChild(d);
 });
+var phicRow=document.getElementById('phInnerColorRow');
+phInnerColors.forEach(function(f){
+var d=document.createElement('div');
+d.style.cssText='width:20px;height:20px;border-radius:50%;cursor:pointer;flex-shrink:0;border:2px solid '+(f.c===phInnerColor?'rgba(255,255,255,.6)':'transparent')+';background:'+f.c;
+d.title=f.n;
+d.onclick=function(){
+LS.setItem('wre_ph_inner_color',f.c);
+phicRow.querySelectorAll('div').forEach(function(x){x.style.borderColor='transparent';});
+d.style.borderColor='rgba(255,255,255,.6)';
+applyPhInnerColor(f.c);
+};
+phicRow.appendChild(d);
+});
 
 var wp=LS.getItem('wre_wp');
 if(wp) document.getElementById('wpPrev').innerHTML='<img src="'+wp+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">';
@@ -104,6 +145,10 @@ var ht=document.getElementById('homeT');
 var hd=document.getElementById('homeD');
 if(ht) ht.style.color=c;
 if(hd) hd.style.color=c;
+}
+function applyPhInnerColor(c){
+var pages=document.querySelectorAll('.app-body');
+pages.forEach(function(p){p.style.color=c;});
 }
 
 window.applyC=function(c){
@@ -162,18 +207,73 @@ var WD=window.WD_DATA;
 if(!WD){body.innerHTML='加载中...';return;}
 var allCats=Object.keys(WD);
 var topCat=LS.getItem('wre_wdtop')||allCats[0];
+if(!WD[topCat]){body.innerHTML='无数据';return;}
 var subCats=Object.keys(WD[topCat]||{});
 var tab=LS.getItem('wre_wdtab')||subCats[0]||'';
 var sel=JSON.parse(LS.getItem('wre_wdsel')||'{}');
 var col=JSON.parse(LS.getItem('wre_wdcol')||'{}');
-if(!WD[topCat]){body.innerHTML='无数据';return;}
 var slots=WD[topCat][tab];
 var scrollBefore=body.scrollTop;
+var isDungeon=(topCat==='副本');
+var isPlot=(topCat==='剧情');
+var isSinglePage=isDungeon||isPlot;
+var needColor=!!window.WD_COLORS&&(topCat.indexOf('衣橱')>=0);
+
 var h='<div style="display:flex;gap:3px;overflow-x:auto;margin-bottom:6px;padding-bottom:2px;-webkit-overflow-scrolling:touch">';
 allCats.forEach(function(c){
 h+='<div style="font-size:10px;padding:3px 8px;border-radius:12px;border:1px solid '+(c===topCat?'rgba(200,192,178,.35)':'rgba(255,255,255,.07)')+';color:'+(c===topCat?'var(--go)':'rgba(160,152,140,.5)')+';cursor:pointer;white-space:nowrap;flex-shrink:0" onclick="swWdTop(\''+c+'\')">'+c+'</div>';
 });
 h+='</div>';
+
+if(isSinglePage){
+// 副本/剧情：所有子分类在一个页面
+var allSlots=slots||WD[topCat][subCats[0]]||{};
+var difficulties=['E','D','C','B','A','S','SS','SSS'];
+h+='<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:6px 10px">';
+Object.keys(allSlots).forEach(function(slot){
+var sv=sel[slot]||'';
+h+='<div style="display:flex;align-items:center;gap:4px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04)">';
+h+='<span style="font-size:10px;color:rgba(160,152,140,.6);width:52px;flex-shrink:0;text-align:right">'+slot+'</span>';
+h+='<span style="padding:2px 5px;border-radius:4px;border:1px solid rgba(255,255,255,.08);font-size:10px;color:'+(sv?'rgba(238,232,218,.9)':'rgba(160,152,140,.5)')+';flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(sv||'点击🎲随机')+'</span>';
+h+='<span style="font-size:12px;cursor:pointer" onclick="rollWdName(\''+slot+'\')">🎲</span>';
+h+='</div>';
+});
+h+='</div>';
+
+// 预览
+var previewParts=[];
+Object.keys(sel).forEach(function(k){if(sel[k])previewParts.push(sel[k]);});
+var preview=previewParts.length?previewParts.join(' / '):'尚未选择';
+h+='<div style="margin-top:8px;font-size:11px;color:rgba(195,185,168,.68);line-height:1.5;min-height:14px">'+esc(preview)+'</div>';
+
+if(isDungeon){
+// 副本专属：难度和奖励
+var curDiff=sel['__diff__']||'';
+var curReward=sel['__reward__']||'';
+var curPenalty=sel['__penalty__']||'';
+h+='<div style="margin-top:6px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:8px 10px">';
+h+='<div style="display:flex;align-items:center;gap:4px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.04)">';
+h+='<span style="font-size:10px;color:rgba(160,152,140,.6);width:52px;flex-shrink:0;text-align:right">难度</span>';
+h+='<span style="padding:2px 5px;border-radius:4px;border:1px solid rgba(255,255,255,.08);font-size:10px;color:'+(curDiff?'rgba(238,232,218,.9)':'rgba(160,152,140,.5)')+';flex:1">'+esc(curDiff||'点击🎲')+'</span>';
+h+='<span style="font-size:12px;cursor:pointer" onclick="rollDungeonMeta(\'diff\')">🎲</span></div>';
+h+='<div style="display:flex;align-items:center;gap:4px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.04)">';
+h+='<span style="font-size:10px;color:rgba(160,152,140,.6);width:52px;flex-shrink:0;text-align:right">奖励</span>';
+h+='<span style="padding:2px 5px;border-radius:4px;border:1px solid rgba(255,255,255,.08);font-size:11px;color:'+(curReward?'rgba(180,220,160,.95)':'rgba(160,152,140,.5)')+';flex:1">'+esc(curReward||'点击🎲')+'</span>';
+h+='<span style="font-size:12px;cursor:pointer" onclick="rollDungeonMeta(\'reward\')">🎲</span></div>';
+h+='<div style="display:flex;align-items:center;gap:4px;padding:3px 0">';
+h+='<span style="font-size:10px;color:rgba(160,152,140,.6);width:52px;flex-shrink:0;text-align:right">惩罚</span>';
+h+='<span style="padding:2px 5px;border-radius:4px;border:1px solid rgba(255,255,255,.08);font-size:11px;color:'+(curPenalty?'rgba(225,150,140,.95)':'rgba(160,152,140,.5)')+';flex:1">'+esc(curPenalty||'点击🎲')+'</span>';
+h+='<span style="font-size:12px;cursor:pointer" onclick="rollDungeonMeta(\'penalty\')">🎲</span></div>';
+h+='</div>';
+}
+
+h+='<div style="display:flex;gap:6px;margin-top:6px">';
+h+='<div style="flex:1;padding:7px;background:rgba(200,192,178,.08);border:1px solid rgba(200,192,178,.3);border-radius:8px;font-size:12px;color:var(--go);cursor:pointer;text-align:center" onclick="rollWdAll()">全部随机</div>';
+h+='<div style="flex:1;padding:7px;background:rgba(200,192,178,.08);border:1px solid rgba(200,192,178,.3);border-radius:8px;font-size:12px;color:var(--go);cursor:pointer;text-align:center" onclick="copyWd()">一键复制</div>';
+h+='</div>';
+
+}else{
+// 衣橱/姓名等：有tab切换
 if(subCats.length>1){
 h+='<div style="display:flex;gap:3px;overflow-x:auto;margin-bottom:6px;padding-bottom:2px;-webkit-overflow-scrolling:touch">';
 subCats.forEach(function(t){
@@ -182,7 +282,6 @@ h+='<div style="font-size:10px;padding:2px 6px;border-radius:6px;border:1px soli
 h+='</div>';
 }
 if(slots){
-var needColor=!!window.WD_COLORS&&(topCat.indexOf('衣橱')>=0);
 h+='<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:6px 10px">';
 Object.keys(slots).forEach(function(slot){
 var sv=sel[slot]||'';
@@ -205,11 +304,14 @@ h+='<div style="display:flex;gap:6px;margin-top:6px">';
 h+='<div style="flex:1;padding:7px;background:rgba(200,192,178,.08);border:1px solid rgba(200,192,178,.3);border-radius:8px;font-size:12px;color:var(--go);cursor:pointer;text-align:center" onclick="rollWdAll()">全部随机</div>';
 h+='<div style="flex:1;padding:7px;background:rgba(200,192,178,.08);border:1px solid rgba(200,192,178,.3);border-radius:8px;font-size:12px;color:var(--go);cursor:pointer;text-align:center" onclick="copyWd()">一键复制</div>';
 h+='</div>';
+}
+
 body.innerHTML=h;
 body.scrollTop=scrollBefore;
-var topRow=body.querySelector('div');
-if(topRow){
-var active=topRow.querySelector('[style*="rgba(200,192,178,.35)"]');
+var rows=body.querySelectorAll('div[style*="overflow-x"]');
+for(var ri=0;ri<rows.length;ri++){
+var active=rows[ri].querySelector('[style*=".35)"]');
+if(!active) active=rows[ri].querySelector('[style*=".25)"]');
 if(active){
 active.scrollIntoView({inline:'center',block:'nearest',behavior:'instant'});
 }
@@ -232,9 +334,92 @@ LS.setItem('wre_wdcol','{}');
 init_wardrobe();
 };
 window.rollWdCol=function(slot){var colors=window.WD_COLORS||['白','黑'];var c=colors[Math.floor(Math.random()*colors.length)];var col=JSON.parse(LS.getItem('wre_wdcol')||'{}');col[slot]=c;LS.setItem('wre_wdcol',JSON.stringify(col));init_wardrobe();};
-window.rollWdName=function(slot){var topCat=LS.getItem('wre_wdtop')||Object.keys(window.WD_DATA||{})[0];var tab=LS.getItem('wre_wdtab')||'';var WD=window.WD_DATA;if(!WD||!WD[topCat]||!WD[topCat][tab])return;var items=WD[topCat][tab][slot];if(!items)return;var pick=items[Math.floor(Math.random()*items.length)];var sel=JSON.parse(LS.getItem('wre_wdsel')||'{}');sel[slot]=pick;LS.setItem('wre_wdsel',JSON.stringify(sel));init_wardrobe();};
-window.rollWdAll=function(){var topCat=LS.getItem('wre_wdtop')||Object.keys(window.WD_DATA||{})[0];var tab=LS.getItem('wre_wdtab')||'';var WD=window.WD_DATA;if(!WD||!WD[topCat]||!WD[topCat][tab])return;var slots=WD[topCat][tab];var sel={},col={};var needColor=!!window.WD_COLORS&&(topCat.indexOf('衣橱')>=0);var colors=window.WD_COLORS||['白'];Object.keys(slots).forEach(function(slot){var items=slots[slot];sel[slot]=items[Math.floor(Math.random()*items.length)];if(needColor)col[slot]=colors[Math.floor(Math.random()*colors.length)];});LS.setItem('wre_wdsel',JSON.stringify(sel));LS.setItem('wre_wdcol',JSON.stringify(col));init_wardrobe();};
-window.copyWd=function(){var sel=JSON.parse(LS.getItem('wre_wdsel')||'{}');var col=JSON.parse(LS.getItem('wre_wdcol')||'{}');var keys=Object.keys(sel);if(!keys.length)return;cp(keys.map(function(k){var c=col[k];return k+'：'+(c?c:'')+sel[k];}).join('，'));toast('已复制');};
+window.rollWdName=function(slot){
+var topCat=LS.getItem('wre_wdtop')||Object.keys(window.WD_DATA||{})[0];
+var tab=LS.getItem('wre_wdtab')||'';
+var WD=window.WD_DATA;
+if(!WD||!WD[topCat])return;
+var isDungeon=(topCat==='副本');
+var isPlot=(topCat==='剧情');
+var isSinglePage=isDungeon||isPlot;
+var slots;
+if(isSinglePage){
+var subCats=Object.keys(WD[topCat]);
+slots=WD[topCat][subCats[0]];
+}else{
+if(!WD[topCat][tab])return;
+slots=WD[topCat][tab];
+}
+var items=slots[slot];
+if(!items)return;
+var pick=items[Math.floor(Math.random()*items.length)];
+var sel=JSON.parse(LS.getItem('wre_wdsel')||'{}');
+sel[slot]=pick;
+LS.setItem('wre_wdsel',JSON.stringify(sel));
+init_wardrobe();
+};
+
+window.rollWdAll=function(){
+var topCat=LS.getItem('wre_wdtop')||Object.keys(window.WD_DATA||{})[0];
+var tab=LS.getItem('wre_wdtab')||'';
+var WD=window.WD_DATA;
+if(!WD||!WD[topCat])return;
+var isDungeon=(topCat==='副本');
+var isPlot=(topCat==='剧情');
+var isSinglePage=isDungeon||isPlot;
+var slots;
+if(isSinglePage){
+var subCats=Object.keys(WD[topCat]);
+slots=WD[topCat][subCats[0]];
+}else{
+if(!WD[topCat][tab])return;
+slots=WD[topCat][tab];
+}
+var sel={},col={};
+var needColor=!!window.WD_COLORS&&(topCat.indexOf('衣橱')>=0);
+var colors=window.WD_COLORS||['白'];
+Object.keys(slots).forEach(function(slot){
+var items=slots[slot];
+sel[slot]=items[Math.floor(Math.random()*items.length)];
+if(needColor)col[slot]=colors[Math.floor(Math.random()*colors.length)];
+});
+if(isDungeon){
+var difficulties=['E','D','C','B','A','S','SS','SSS'];
+var rewards=['积分×200','积分×500','积分×1000','稀有道具×1','属性点×3','属性点×5','限定称号','SSR装备抽取券','好感度道具×2','随机技能书','变装卡×1','复活币×1','积分×300+随机道具','幸运星×5','全属性+1药水','指定角色好感+10','隐藏剧情解锁券','限时双倍积分卡','传送符×3','金色宝箱钥匙','神秘礼包·不知道开出什么','角色专属语音·限定','ta的贴身物品·用途不明','对方的一个秘密','强制告白卡·对方必须回应','红线检测器·查看隐藏好感','月光宝盒·回溯一轮剧情','剧本修改权×1','NPC临时雇佣券','全服广播权×1'];
+var penalties=['积分-100','随机属性-2','好感度随机-5','装备耐久归零','强制触发尴尬事件','被NPC目击社死现场','随机一位角色生气三轮','丢失一件背包道具','被迫穿奇怪衣服一轮','强制告白随机角色','下一轮开局被误会','随机获得一个debuff','被贴标签·全服可见','被迫说出一个秘密','下轮行动选项-1','临时失忆忘掉一个人名','被NPC强制带走逛街两小时','获得称号·倒霉蛋','下轮所有骰子-1','被反派注意到了'];
+sel['__diff__']=difficulties[Math.floor(Math.random()*difficulties.length)];
+sel['__reward__']=rewards[Math.floor(Math.random()*rewards.length)];
+sel['__penalty__']=penalties[Math.floor(Math.random()*penalties.length)];
+}
+LS.setItem('wre_wdsel',JSON.stringify(sel));
+LS.setItem('wre_wdcol',JSON.stringify(col));
+init_wardrobe();
+};
+
+window.rollDungeonMeta=function(type){
+var sel=JSON.parse(LS.getItem('wre_wdsel')||'{}');
+var difficulties=['E','D','C','B','A','S','SS','SSS'];
+var rewards=['积分×200','积分×500','积分×1000','稀有道具×1','属性点×3','属性点×5','限定称号','SSR装备抽取券','好感度道具×2','随机技能书','变装卡×1','复活币×1','积分×300+随机道具','幸运星×5','全属性+1药水','指定角色好感+10','隐藏剧情解锁券','限时双倍积分卡','传送符×3','金色宝箱钥匙','神秘礼包·不知道开出什么','角色专属语音·限定','ta的贴身物品·用途不明','对方的一个秘密','强制告白卡·对方必须回应','红线检测器·查看隐藏好感','月光宝盒·回溯一轮剧情','剧本修改权×1','NPC临时雇佣券','全服广播权×1'];
+var penalties=['积分-100','随机属性-2','好感度随机-5','装备耐久归零','强制触发尴尬事件','被NPC目击社死现场','随机一位角色生气三轮','丢失一件背包道具','被迫穿奇怪衣服一轮','强制告白随机角色','下一轮开局被误会','随机获得一个debuff','被贴标签·全服可见','被迫说出一个秘密','下轮行动选项-1','临时失忆忘掉一个人名','被NPC强制带走逛街两小时','获得称号·倒霉蛋','下轮所有骰子-1','被反派注意到了'];
+if(type==='diff') sel['__diff__']=difficulties[Math.floor(Math.random()*difficulties.length)];
+if(type==='reward') sel['__reward__']=rewards[Math.floor(Math.random()*rewards.length)];
+if(type==='penalty') sel['__penalty__']=penalties[Math.floor(Math.random()*penalties.length)];
+LS.setItem('wre_wdsel',JSON.stringify(sel));
+init_wardrobe();
+};
+
+window.copyWd=function(){
+var sel=JSON.parse(LS.getItem('wre_wdsel')||'{}');
+var col=JSON.parse(LS.getItem('wre_wdcol')||'{}');
+var keys=Object.keys(sel).filter(function(k){return k.indexOf('__')!==0;});
+if(!keys.length)return;
+var parts=keys.map(function(k){var c=col[k];return k+'：'+(c?c:'')+sel[k];});
+if(sel['__diff__']) parts.push('难度：'+sel['__diff__']);
+if(sel['__reward__']) parts.push('奖励：'+sel['__reward__']);
+if(sel['__penalty__']) parts.push('失败惩罚：'+sel['__penalty__']);
+cp(parts.join('，'));
+toast('已复制');
+};
 
 window.init_contacts=function(){
 var data=JSON.parse(LS.getItem('wre_contacts')||'{"groups":{"默认":[]}}');
@@ -378,26 +563,63 @@ document.getElementById('styleBody').innerHTML='<div style="background:rgba(255,
 window.init_icon=function(){
 var icons=[
 {id:'apple',label:'Apple',svg:'<path d="M15.5 8.5c0-1.5-1.2-2.5-2.5-2.5-.8 0-1.5.3-2 .8-.5-.5-1.2-.8-2-.8-1.3 0-2.5 1-2.5 2.5 0 3.5 4.5 7 4.5 7s4.5-3.5 4.5-7z" stroke="ST" stroke-width="1.2" fill="none" stroke-linejoin="round"/>'},
+{id:'huawei',label:'华为',svg:'<ellipse cx="12" cy="12" rx="7" ry="7" stroke="ST" stroke-width="1.2" fill="none"/><path d="M12 5v4M9 7l1.5 3.5M15 7l-1.5 3.5M7 11l3.5 1.5M17 11l-3.5 1.5M9 17l1.5-3.5M15 17l-1.5-3.5M12 19v-4" stroke="ST" stroke-width=".8" stroke-linecap="round"/>'},
+{id:'xiaomi',label:'小米',svg:'<rect x="6" y="6" width="12" height="12" rx="3" stroke="ST" stroke-width="1.2" fill="none"/><path d="M9 10v4M12 8v6M15 10v4" stroke="ST" stroke-width="1.2" stroke-linecap="round"/>'},
+{id:'oppo',label:'OPPO',svg:'<circle cx="12" cy="12" r="7" stroke="ST" stroke-width="1.2" fill="none"/><circle cx="12" cy="12" r="3" stroke="ST" stroke-width="1" fill="none"/>'},
+{id:'vivo',label:'vivo',svg:'<path d="M6 10l6 7 6-7" stroke="ST" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 8l3 3.5L15 8" stroke="ST" stroke-width="1" fill="none" stroke-linecap="round"/>'},
+{id:'samsung',label:'三星',svg:'<ellipse cx="12" cy="12" rx="8" ry="4" stroke="ST" stroke-width="1.2" fill="none" transform="rotate(-30 12 12)"/><ellipse cx="12" cy="12" rx="8" ry="4" stroke="ST" stroke-width="1.2" fill="none" transform="rotate(30 12 12)"/><circle cx="12" cy="12" r="1.5" fill="ST"/>'},
+{id:'sony',label:'索尼',svg:'<rect x="5" y="7" width="14" height="10" rx="2" stroke="ST" stroke-width="1.2" fill="none"/><circle cx="12" cy="12" r="3.5" stroke="ST" stroke-width="1" fill="none"/><circle cx="12" cy="12" r="1.2" fill="ST"/>'},
+{id:'pixel',label:'Pixel',svg:'<rect x="7" y="4" width="10" height="16" rx="2" stroke="ST" stroke-width="1.2" fill="none"/><line x1="7" y1="8" x2="17" y2="8" stroke="ST" stroke-width="1"/><circle cx="12" cy="14" r="2.5" stroke="ST" stroke-width="1" fill="none"/>'},
 {id:'cat',label:'小猫',svg:'<path d="M7 11l1-5h2l2 3 2-3h2l1 5" stroke="ST" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="12" cy="15.5" rx="5" ry="4" stroke="ST" stroke-width="1.2" fill="none"/><circle cx="10" cy="15" r=".7" fill="ST"/><circle cx="14" cy="15" r=".7" fill="ST"/>'},
 {id:'dog',label:'小狗',svg:'<path d="M7 11c0-2.5 1.5-4 3-4h1l1 2 1-2h1c1.5 0 3 1.5 3 4" stroke="ST" stroke-width="1.2" fill="none" stroke-linecap="round"/><ellipse cx="12" cy="15.5" rx="5" ry="4" stroke="ST" stroke-width="1.2" fill="none"/><circle cx="10" cy="15" r=".7" fill="ST"/><circle cx="14" cy="15" r=".7" fill="ST"/>'},
 {id:'rabbit',label:'小兔',svg:'<ellipse cx="12" cy="16" rx="5" ry="4.5" stroke="ST" stroke-width="1.2" fill="none"/><path d="M10 12V6c0-.8.5-1.5 1-1.5M14 12V6c0-.8-.5-1.5-1-1.5" stroke="ST" stroke-width="1.2" fill="none" stroke-linecap="round"/>'},
 {id:'bear',label:'小熊',svg:'<circle cx="8.5" cy="8.5" r="2" stroke="ST" stroke-width="1.2" fill="none"/><circle cx="15.5" cy="8.5" r="2" stroke="ST" stroke-width="1.2" fill="none"/><circle cx="12" cy="14" r="5.5" stroke="ST" stroke-width="1.2" fill="none"/>'},
-{id:'star',label:'星星',svg:'<path d="M12 4l2.2 4.5 5 .7-3.6 3.5.85 5L12 15.5 7.55 17.7l.85-5-3.6-3.5 5-.7z" stroke="ST" stroke-width="1.2" fill="none" stroke-linejoin="round"/>'}
+{id:'star',label:'星星',svg:'<path d="M12 4l2.2 4.5 5 .7-3.6 3.5.85 5L12 15.5 7.55 17.7l.85-5-3.6-3.5 5-.7z" stroke="ST" stroke-width="1.2" fill="none" stroke-linejoin="round"/>'},
+{id:'moon',label:'月亮',svg:'<path d="M15 12a6 6 0 11-5-5.9A4.5 4.5 0 0015 12z" stroke="ST" stroke-width="1.2" fill="none"/>'},
+{id:'heart',label:'爱心',svg:'<path d="M12 19s-7-4.5-7-8.5c0-2 1.5-3.5 3.5-3.5 1.2 0 2.3.6 3 1.5.7-.9 1.8-1.5 3-1.5 2 0 3.5 1.5 3.5 3.5 0 4-7 8.5-7 8.5z" stroke="ST" stroke-width="1.2" fill="none"/>'},
+{id:'diamond',label:'钻石',svg:'<path d="M12 20L3 10l3-5h12l3 5z" stroke="ST" stroke-width="1.2" fill="none" stroke-linejoin="round"/><path d="M3 10h18M9 5l-2 5 5 10 5-10-2-5" stroke="ST" stroke-width=".8" fill="none" stroke-linejoin="round"/>'}
 ];
 var cur=LS.getItem('wre_icon')||'apple';
 var sc='rgba(200,192,178,.65)';
-document.getElementById('iconBody').innerHTML='<div style="font-size:10px;color:rgba(160,152,140,.6);letter-spacing:2px;margin-bottom:8px">选择悬浮球图标</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">'+icons.map(function(ic){return'<div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:9px 5px;border-radius:9px;border:1px solid '+(ic.id===cur?'rgba(200,192,178,.3)':'rgba(255,255,255,.07)')+';background:'+(ic.id===cur?'rgba(200,192,178,.05)':'transparent')+';cursor:pointer" onclick="pickIcon(\''+ic.id+'\')"><svg viewBox="0 0 24 24" width="28" height="28">'+ic.svg.replace(/ST/g,sc)+'</svg><span style="font-size:10px;color:rgba(195,185,168,.68)">'+ic.label+'</span></div>';}).join('')+'</div>';
+var h='<div style="font-size:10px;color:rgba(160,152,140,.6);letter-spacing:2px;margin-bottom:8px">选择悬浮球图标</div>';
+h+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">';
+for(var i=0;i<icons.length;i++){
+var ic=icons[i];
+var isCur=ic.id===cur;
+h+='<div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 3px;border-radius:9px;';
+h+='border:1px solid '+(isCur?'rgba(200,192,178,.3)':'rgba(255,255,255,.07)')+';';
+h+='background:'+(isCur?'rgba(200,192,178,.05)':'transparent')+';';
+h+='cursor:pointer" onclick="pickIcon(\''+ic.id+'\')">';
+h+='<svg viewBox="0 0 24 24" width="24" height="24">';
+h+=ic.svg.replace(/ST/g,sc);
+h+='</svg>';
+h+='<span style="font-size:9px;color:rgba(195,185,168,.68)">'+ic.label+'</span>';
+h+='</div>';
+}
+h+='</div>';
+document.getElementById('iconBody').innerHTML=h;
 };
+
 window.pickIcon=function(id){
 LS.setItem('wre_icon',id);
 var sc2='rgba(200,192,178,.75)';
 var allIcons={
 apple:'<path d="M15.5 8.5c0-1.5-1.2-2.5-2.5-2.5-.8 0-1.5.3-2 .8-.5-.5-1.2-.8-2-.8-1.3 0-2.5 1-2.5 2.5 0 3.5 4.5 7 4.5 7s4.5-3.5 4.5-7z" stroke="'+sc2+'" stroke-width="1.2" fill="none" stroke-linejoin="round"/>',
+huawei:'<ellipse cx="12" cy="12" rx="7" ry="7" stroke="'+sc2+'" stroke-width="1.2" fill="none"/><path d="M12 5v4M9 7l1.5 3.5M15 7l-1.5 3.5M7 11l3.5 1.5M17 11l-3.5 1.5M9 17l1.5-3.5M15 17l-1.5-3.5M12 19v-4" stroke="'+sc2+'" stroke-width=".8" stroke-linecap="round"/>',
+xiaomi:'<rect x="6" y="6" width="12" height="12" rx="3" stroke="'+sc2+'" stroke-width="1.2" fill="none"/><path d="M9 10v4M12 8v6M15 10v4" stroke="'+sc2+'" stroke-width="1.2" stroke-linecap="round"/>',
+oppo:'<circle cx="12" cy="12" r="7" stroke="'+sc2+'" stroke-width="1.2" fill="none"/><circle cx="12" cy="12" r="3" stroke="'+sc2+'" stroke-width="1" fill="none"/>',
+vivo:'<path d="M6 10l6 7 6-7" stroke="'+sc2+'" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 8l3 3.5L15 8" stroke="'+sc2+'" stroke-width="1" fill="none" stroke-linecap="round"/>',
+samsung:'<ellipse cx="12" cy="12" rx="8" ry="4" stroke="'+sc2+'" stroke-width="1.2" fill="none" transform="rotate(-30 12 12)"/><ellipse cx="12" cy="12" rx="8" ry="4" stroke="'+sc2+'" stroke-width="1.2" fill="none" transform="rotate(30 12 12)"/><circle cx="12" cy="12" r="1.5" fill="'+sc2+'"/>',
+sony:'<rect x="5" y="7" width="14" height="10" rx="2" stroke="'+sc2+'" stroke-width="1.2" fill="none"/><circle cx="12" cy="12" r="3.5" stroke="'+sc2+'" stroke-width="1" fill="none"/><circle cx="12" cy="12" r="1.2" fill="'+sc2+'"/>',
+pixel:'<rect x="7" y="4" width="10" height="16" rx="2" stroke="'+sc2+'" stroke-width="1.2" fill="none"/><line x1="7" y1="8" x2="17" y2="8" stroke="'+sc2+'" stroke-width="1"/><circle cx="12" cy="14" r="2.5" stroke="'+sc2+'" stroke-width="1" fill="none"/>',
 cat:'<path d="M7 11l1-5h2l2 3 2-3h2l1 5" stroke="'+sc2+'" stroke-width="1.2" fill="none"/><ellipse cx="12" cy="15.5" rx="5" ry="4" stroke="'+sc2+'" stroke-width="1.2" fill="none"/>',
 dog:'<path d="M7 11c0-2.5 1.5-4 3-4h1l1 2 1-2h1c1.5 0 3 1.5 3 4" stroke="'+sc2+'" stroke-width="1.2" fill="none"/><ellipse cx="12" cy="15.5" rx="5" ry="4" stroke="'+sc2+'" stroke-width="1.2" fill="none"/>',
 rabbit:'<ellipse cx="12" cy="16" rx="5" ry="4.5" stroke="'+sc2+'" stroke-width="1.2" fill="none"/><path d="M10 12V6c0-.8.5-1.5 1-1.5M14 12V6c0-.8-.5-1.5-1-1.5" stroke="'+sc2+'" stroke-width="1.2" fill="none"/>',
 bear:'<circle cx="8.5" cy="8.5" r="2" stroke="'+sc2+'" stroke-width="1.2" fill="none"/><circle cx="15.5" cy="8.5" r="2" stroke="'+sc2+'" stroke-width="1.2" fill="none"/><circle cx="12" cy="14" r="5.5" stroke="'+sc2+'" stroke-width="1.2" fill="none"/>',
-star:'<path d="M12 4l2.2 4.5 5 .7-3.6 3.5.85 5L12 15.5 7.55 17.7l.85-5-3.6-3.5 5-.7z" stroke="'+sc2+'" stroke-width="1.2" fill="none" stroke-linejoin="round"/>'
+star:'<path d="M12 4l2.2 4.5 5 .7-3.6 3.5.85 5L12 15.5 7.55 17.7l.85-5-3.6-3.5 5-.7z" stroke="'+sc2+'" stroke-width="1.2" fill="none" stroke-linejoin="round"/>',
+moon:'<path d="M15 12a6 6 0 11-5-5.9A4.5 4.5 0 0015 12z" stroke="'+sc2+'" stroke-width="1.2" fill="none"/>',
+heart:'<path d="M12 19s-7-4.5-7-8.5c0-2 1.5-3.5 3.5-3.5 1.2 0 2.3.6 3 1.5.7-.9 1.8-1.5 3-1.5 2 0 3.5 1.5 3.5 3.5 0 4-7 8.5-7 8.5z" stroke="'+sc2+'" stroke-width="1.2" fill="none"/>',
+diamond:'<path d="M12 20L3 10l3-5h12l3 5z" stroke="'+sc2+'" stroke-width="1.2" fill="none" stroke-linejoin="round"/><path d="M3 10h18M9 5l-2 5 5 10 5-10-2-5" stroke="'+sc2+'" stroke-width=".8" fill="none" stroke-linejoin="round"/>'
 };
 var svg=allIcons[id]||allIcons.apple;
 var orbSvg='<svg viewBox="0 0 24 24" width="22" height="22">'+svg+'</svg>';
