@@ -207,6 +207,13 @@ h+='<div style="flex:1;padding:7px;background:rgba(200,192,178,.08);border:1px s
 h+='</div>';
 body.innerHTML=h;
 body.scrollTop=scrollBefore;
+var topRow=body.querySelector('div');
+if(topRow){
+var active=topRow.querySelector('[style*="rgba(200,192,178,.35)"]');
+if(active){
+active.scrollIntoView({inline:'center',block:'nearest',behavior:'instant'});
+}
+}
 };
 
 window.swWdTop=function(c){
