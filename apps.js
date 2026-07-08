@@ -53,8 +53,8 @@ body.innerHTML=''
 +'<span id="chex" style="font-family:var(--ffm);font-size:11px;color:rgba(195,185,168,.68)">'+cc+'</span></div>'
 +'<div id="presetRow" style="display:flex;gap:4px;overflow-x:auto;padding:2px 0;-webkit-overflow-scrolling:touch"></div></div>'
 +'<div style="font-size:11px;color:rgba(160,152,140,.6);letter-spacing:2px;margin-bottom:5px">字体颜色</div>'
-+'<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:10px 12px;margin-bottom:8px;overflow:hidden">'
-+'<div id="fcRow" style="display:flex;gap:6px;overflow-x:auto;padding:2px 0;-webkit-overflow-scrolling:touch;min-height:26px;scrollbar-width:none;flex-wrap:nowrap;-ms-overflow-style:none"></div></div>'
++'<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:10px 12px;margin-bottom:8px">'
++'<div id="fcRow" style="display:flex;gap:5px;overflow-x:scroll;padding:2px 0;-webkit-overflow-scrolling:touch;min-height:28px;scrollbar-width:none;flex-wrap:nowrap"></div></div>'
 +'<div style="font-size:11px;color:rgba(160,152,140,.6);letter-spacing:2px;margin-bottom:5px">字号</div>'
 +'<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:10px 12px;margin-bottom:8px">'
 +'<div style="display:flex;align-items:center;gap:8px">'
@@ -555,7 +555,6 @@ h+='<span style="font-size:12px;color:rgba(238,232,218,.9)">'+esc(b.name)+'</spa
 h+='<span style="font-family:var(--ffm);font-size:12px;color:var(--go)">'+esc(b.amt)+'</span></div>';
 });
 }else{
-// 按纪年分组
 var groups={};
 ledger.forEach(function(l){
 var era=l.era||'未知纪年';
@@ -572,7 +571,10 @@ h+='<div style="text-align:center;padding:20px;font-size:11px;color:rgba(160,152
 eras.forEach(function(era){
 var g=groups[era];
 h+='<div style="margin-bottom:10px">';
-h+='<div style="font-size:10px;color:rgba(160,152,140,.6);letter-spacing:1.5px;margin-bottom:4px;padding-bottom:3px;border-bottom:1px solid rgba(255,255,255,.05)">'+esc(era)+'</div>';
+h+='<div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:3px;border-bottom:1px solid rgba(255,255,255,.05);margin-bottom:4px">';
+h+='<span style="font-size:10px;color:rgba(160,152,140,.6);letter-spacing:1.5px">'+esc(era)+'</span>';
+h+='<span style="font-size:9px;color:rgba(190,130,125,.6);cursor:pointer;padding:2px 6px;border:1px solid rgba(190,130,125,.2);border-radius:4px" onclick="clearLedgerEra(\''+esc(era)+'\')">清空</span>';
+h+='</div>';
 h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:6px">';
 h+='<div style="padding:5px;border-radius:5px;text-align:center;background:rgba(140,180,140,.05);border:1px solid rgba(140,180,140,.12)">';
 h+='<div style="font-size:9px;color:rgba(160,152,140,.5)">收入</div>';
@@ -580,25 +582,53 @@ h+='<div style="font-size:12px;color:rgba(140,180,140,.9)">+'+g.inc+'</div></div
 h+='<div style="padding:5px;border-radius:5px;text-align:center;background:rgba(190,130,125,.05);border:1px solid rgba(190,130,125,.12)">';
 h+='<div style="font-size:9px;color:rgba(160,152,140,.5)">支出</div>';
 h+='<div style="font-size:12px;color:rgba(190,130,125,.9)">-'+g.exp+'</div></div></div>';
-g.items.forEach(function(l){
+g.items.forEach(function(l,li){
 h+='<div style="display:flex;align-items:center;gap:6px;padding:4px 8px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:5px;margin-bottom:2px">';
-h+='<div style="width:4px;height:4px;border-radius:50%;background:'+(l.type==='inc'?'rgba(140,180,140,.9)':'rgba(190,130,125,.9)')+'"></div>';
-h+='<div style="flex:1;font-size:11px;color:rgba(238,232,218,.9)">'+esc(l.name)+'</div>';
-h+='<div style="font-family:var(--ffm);font-size:10px;color:'+(l.type==='inc'?'rgba(140,180,140,.9)':'rgba(190,130,125,.9)')+'">'+esc(l.amt)+'</div>';
-h+='<div style="font-size:9px;color:rgba(160,152,140,.4)">'+esc(l.time)+'</div></div>';
+h+='<div style="width:4px;height:4px;border-radius:50%;background:'+(l.type==='inc'?'rgba(140,180,140,.9)':'rgba(190,130,125,.9)')+';flex-shrink:0"></div>';
+h+='<div style="flex:1;font-size:11px;color:rgba(238,232,218,.9);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(l.name)+'</div>';
+h+='<div style="font-family:var(--ffm);font-size:10px;color:'+(l.type==='inc'?'rgba(140,180,140,.9)':'rgba(190,130,125,.9)')+';flex-shrink:0">'+esc(l.amt)+'</div>';
+h+='<div style="font-size:9px;color:rgba(160,152,140,.4);flex-shrink:0">'+esc(l.time)+'</div>';
+h+='<div style="font-size:9px;color:rgba(190,130,125,.5);cursor:pointer;padding:2px 4px;flex-shrink:0" onclick="delLedgerItem(\''+esc(era)+'\','+li+')">×</div>';
+h+='</div>';
 });
 h+='</div>';
 });
+h+='<div style="text-align:center;margin-top:6px"><span style="font-size:10px;color:rgba(190,130,125,.5);cursor:pointer;padding:4px 12px;border:1px solid rgba(190,130,125,.2);border-radius:6px" onclick="clearAllLedger()">清空全部记账</span></div>';
 }
 }
 body.innerHTML=h;
 };
 window.swBagTab=function(t){LS.setItem('wre_bagtab',t);init_bag();};
 
-window.init_style=function(){
-var styles=[{n:'古风古韵',d:'古典白话为底，辞藻华丽对仗意境'},{n:'快意江湖',d:'刀光剑影写儿女情长'},{n:'仙道长歌',d:'仙气飘渺道法自然'},{n:'淡水幸福',d:'平实语言写最深感情'},{n:'酸涩虐恋',d:'刀子嵌在甜里'},{n:'晋江言情',d:'丰盛细腻节奏张弛有度'},{n:'潮湿岛屿',d:'黏腻温热暧昧欲望'},{n:'县城文学',d:'小镇青年困顿与挣扎'},{n:'霓虹冷硬',d:'都市丛林孤独猎人'},{n:'艳尸美学',d:'死亡与爱欲交缠'},{n:'颓靡华丽',d:'腐烂的玫瑰也是玫瑰'},{n:'地下独白',d:'密集撕裂的内心独白'},{n:'电影镜头',d:'长镜头特写切换'},{n:'荒诞现实',d:'人物在现实重压下变形'},{n:'失败哲人',d:'西伯利亚冻土疲惫观察者'},{n:'痞子浪漫',d:'语言调皮诗意与流氓并存'},{n:'忠诚狗狗',d:'像小狗一样友好忠诚超爱你'},{n:'物质崇拜',d:'剧情浮夸详标品牌质感'},{n:'轻松网文',d:'配角有脑爽但不无聊'},{n:'无脑爽文',d:'主角开挂装逼打脸'},{n:'日系轻小说',d:'中二病日常擅吐槽'}];
-var cur=LS.getItem('wre_style_active')||'尚未设定';
-document.getElementById('styleBody').innerHTML='<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:10px;text-align:center;margin-bottom:6px"><div style="font-size:10px;color:rgba(160,152,140,.6);letter-spacing:2px;margin-bottom:3px">当前文风</div><div style="font-size:14px;color:rgba(238,232,218,.9);font-weight:500">'+esc(cur)+'</div></div><div style="font-size:10px;color:rgba(210,145,138,.75);text-align:center;margin-bottom:8px;line-height:1.5;padding:6px 8px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:7px">更换文风请在聊天框输入<br><span style="color:var(--go)">【文风更换为：文风名】</span></div><div style="display:flex;flex-direction:column;gap:3px">'+styles.map(function(s){var isCur=cur===s.n;return'<div style="padding:7px 9px;background:'+(isCur?'rgba(200,192,178,.06)':'rgba(255,255,255,.03)')+';border:1px solid '+(isCur?'rgba(200,192,178,.25)':'rgba(255,255,255,.07)')+';border-radius:7px"><div style="font-size:12px;color:rgba(238,232,218,.9)">'+s.n+(isCur?' ← 当前':'')+'</div><div style="font-size:10px;color:rgba(160,152,140,.5);margin-top:1px">'+s.d+'</div></div>';}).join('')+'</div>';
+window.delLedgerItem=function(era,idx){
+var ledger=JSON.parse(LS.getItem('wre_ledger')||'[]');
+var count=0;
+for(var i=0;i<ledger.length;i++){
+var e=ledger[i].era||'未知纪年';
+if(e===era){
+if(count===idx){
+ledger.splice(i,1);
+break;
+}
+count++;
+}
+}
+LS.setItem('wre_ledger',JSON.stringify(ledger));
+init_bag();
+};
+
+window.clearLedgerEra=function(era){
+if(!confirm('确定清空「'+era+'」的所有记账？'))return;
+var ledger=JSON.parse(LS.getItem('wre_ledger')||'[]');
+ledger=ledger.filter(function(l){return(l.era||'未知纪年')!==era;});
+LS.setItem('wre_ledger',JSON.stringify(ledger));
+init_bag();
+};
+
+window.clearAllLedger=function(){
+if(!confirm('确定清空全部记账记录？'))return;
+LS.setItem('wre_ledger','[]');
+init_bag();
 };
 
 window.init_icon=function(){
