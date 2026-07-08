@@ -126,7 +126,7 @@ else if(b.t==='选项'){var sp=b.d.split('|');for(var j=0;j<sp.length;j++){var o
 else if(b.t==='面板')panel=b.d;
 else if(b.t==='任务'){var tparts=b.d.split('|');mQ=tparts[0]||'';sQ=tparts[1]||'';}
 else if(b.t==='角色'){var sp2=b.d.split('|');chars.push({name:sp2[0]||'',state:sp2[1]||'',thought:sp2[2]||'',favor:sp2[3]||''});}
-else if(b.t==='消息'){if(b.d.indexOf('NSFW')===0)nsfw=b.d.replace(/^NSFW[\|~]/,'');else msgs.push(b.d);}
+else if(b.t==='消息'){if(b.d.indexOf('NSFW')===0)nsfw=b.d.replace(/^NSFW[\|~]/,'');else{var mm=b.d.split('|');for(var mi=0;mi<mm.length;mi++){if(mm[mi].trim())msgs.push(mm[mi].trim());}}}
 else if(b.t==='直播'){if(b.d==='关')lOff=true;else{var parts=b.d.split('|');for(var j=0;j<parts.length;j++){if(parts[j].indexOf('观众~')===0)lV=parts[j].split('~')[1]||'0';else if(parts[j].indexOf('打赏~')===0)lT=parts[j].slice(3);else lB.push(parts[j]);}}}
 else if(b.t==='群聊'){var gl=b.d.split('|');html+=gChat(gl[0]||'群聊',gl[1]||'3',gl.slice(2));}
 else if(b.t==='私聊'){var pl=b.d.split('|');html+=gChat(pl[0]||'私聊','2',pl.slice(1));}
