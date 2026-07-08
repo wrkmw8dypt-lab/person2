@@ -360,3 +360,8 @@ details[open]>.sub-h .sub-arr{transform:rotate(180deg);}
 .ph-home-logo{font-size:9px;letter-spacing:3px;color:rgba(255,255,255,.6);margin-bottom:12px;font-weight:500;text-shadow:0 1px 4px rgba(0,0,0,.4);}
 .ph-home-t{font-size:62px;font-weight:700;color:#fff;letter-spacing:-2px;line-height:.95;margin-bottom:4px;text-shadow:0 2px 8px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.2),0 0 40px rgba(255,255,255,.15);filter:drop-shadow(0 0 20px rgba(255,255,255,.25)) drop-shadow(0 4px 12px rgba(0,0,0,.4));}
 .ph-home-d{font-size:11px;color:rgba(255,255,255,.8);letter-spacing:1px;text-shadow:0 1px 4px rgba(0,0,0,.5),0 2px 8px rgba(0,0,0,.3);margin-bottom:0;}
+
+:root{--pic:rgba(240,235,222,.91);}
+.app-body{color:var(--pic);}
+.nav-title{color:var(--pic);}
+.app-nav{color:var(--pic);}
