@@ -265,7 +265,7 @@ details[open]>.sub-h .sub-arr{transform:rotate(180deg);}
 .orb svg{width:22px;height:22px;}
 .phone-wrap{position:fixed;bottom:128px;right:14px;z-index:9998;transition:all .28s cubic-bezier(.32,1.5,.62,1);opacity:0;pointer-events:none;transform:scale(.88) translateY(16px);transform-origin:bottom right;}
 .phone-wrap.open{opacity:1;pointer-events:all;transform:scale(1) translateY(0);}
-.phone{width:272px;height:520px;background:rgba(14,12,20,.94);border-radius:32px;border:1px solid rgba(255,255,255,.12);box-shadow:0 28px 70px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.06);overflow:hidden;display:flex;flex-direction:column;position:relative;}
+.phone{width:272px;height:440px;background:rgba(14,12,20,.94);border-radius:32px;border:1px solid rgba(255,255,255,.12);box-shadow:0 28px 70px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.06);overflow:hidden;display:flex;flex-direction:column;position:relative;}
 .ph-island{width:72px;height:22px;background:#0a0814;border-radius:0 0 14px 14px;position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:10;}
 .ph-top{padding:26px 20px 4px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
 .ph-time{font-family:var(--ffm);font-size:.6em;color:var(--ts);}
