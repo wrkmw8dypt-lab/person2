@@ -145,7 +145,7 @@ html+=gMsgs(msgs,nsfw);
 html+=gLive(lB,lT,lV,lOff);
 R.innerHTML=html;
 var fc=LS.getItem('wre_fc');if(fc){document.documentElement.style.setProperty('--fc',fc);}
-var fs=LS.getItem('wre_fs');if(fs)document.documentElement.style.fontSize=fs+'px';
+var fs=LS.getItem('wre_fs');if(fs){document.documentElement.style.fontSize=fs+'px';R.style.fontSize=fs+'px';}
 var sc=LS.getItem('wre_color');if(sc){var r2=parseInt(sc.slice(1,3),16),g2=parseInt(sc.slice(3,5),16),b2=parseInt(sc.slice(5,7),16);document.documentElement.style.setProperty('--go','rgba('+r2+','+g2+','+b2+',.88)');document.documentElement.style.setProperty('--gd','rgba('+r2+','+g2+','+b2+',.35)');}
 var avs=document.querySelectorAll('input[data-av]');for(var i=0;i<avs.length;i++){var inp=avs[i],nm=inp.getAttribute('data-av');var img=document.getElementById(inp.id+'-i');var tx=document.getElementById(inp.id+'-t')||document.getElementById(inp.id+'-p');if(img)avBind(img,tx,inp,nm);}
 var btns=document.querySelectorAll('.act-btn');for(var i=0;i<btns.length;i++){btns[i].onclick=function(){var t=this.getAttribute('data-copy');if(t){cp(t);toast('✓ 已复制');}};}
