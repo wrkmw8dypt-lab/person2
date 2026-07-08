@@ -655,6 +655,18 @@ var icons=[
 {id:'diamond',label:'钻石',svg:'<path d="M12 20L3 10l3-5h12l3 5z" stroke="ST" stroke-width="1.2" fill="none" stroke-linejoin="round"/><path d="M3 10h18M9 5l-2 5 5 10 5-10-2-5" stroke="ST" stroke-width=".8" fill="none" stroke-linejoin="round"/>'}
 ];
 var cur=LS.getItem('wre_icon')||'apple';
+var customImg=LS.getItem('wre_icon_custom')||'';
+if(customImg){
+h+='<div style="margin-bottom:6px;text-align:center">';
+if(cur==='custom'){
+h+='<div style="display:inline-block;padding:3px;border:2px solid rgba(200,192,178,.4);border-radius:50%"><img src="'+customImg+'" width="28" height="28" style="border-radius:50%;object-fit:cover"></div>';
+h+='<div style="font-size:9px;color:var(--go);margin-top:2px">当前使用</div>';
+}else{
+h+='<div style="display:inline-block;padding:3px;border:2px solid transparent;border-radius:50%;cursor:pointer" onclick="pickIcon(\'custom\')"><img src="'+customImg+'" width="28" height="28" style="border-radius:50%;object-fit:cover"></div>';
+h+='<div style="font-size:9px;color:rgba(160,152,140,.5);margin-top:2px">自定义</div>';
+}
+h+='</div>';
+}
 var sc='rgba(200,192,178,.65)';
 var h='<div style="font-size:10px;color:rgba(160,152,140,.6);letter-spacing:2px;margin-bottom:8px">选择悬浮球图标</div>';
 h+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">';
@@ -671,6 +683,10 @@ h+='</svg>';
 h+='<span style="font-size:9px;color:rgba(195,185,168,.68)">'+ic.label+'</span>';
 h+='</div>';
 }
+h+='</div>';
+h+='<div style="margin-top:8px;text-align:center">';
+h+='<div style="display:inline-block;padding:5px 12px;border-radius:6px;border:1px solid rgba(200,192,178,.25);font-size:10px;color:rgba(200,192,178,.7);cursor:pointer" onclick="document.getElementById(\'iconUpload\').click()">上传自定义图标</div>';
+h+='<input type="file" accept="image/*" id="iconUpload" style="display:none" onchange="uploadIcon(this)">';
 h+='</div>';
 document.getElementById('iconBody').innerHTML=h;
 };
@@ -696,6 +712,17 @@ moon:'<path d="M15 12a6 6 0 11-5-5.9A4.5 4.5 0 0015 12z" stroke="'+sc2+'" stroke
 heart:'<path d="M12 19s-7-4.5-7-8.5c0-2 1.5-3.5 3.5-3.5 1.2 0 2.3.6 3 1.5.7-.9 1.8-1.5 3-1.5 2 0 3.5 1.5 3.5 3.5 0 4-7 8.5-7 8.5z" stroke="'+sc2+'" stroke-width="1.2" fill="none"/>',
 diamond:'<path d="M12 20L3 10l3-5h12l3 5z" stroke="'+sc2+'" stroke-width="1.2" fill="none" stroke-linejoin="round"/><path d="M3 10h18M9 5l-2 5 5 10 5-10-2-5" stroke="'+sc2+'" stroke-width=".8" fill="none" stroke-linejoin="round"/>'
 };
+if(id==='custom'){
+var cimg=LS.getItem('wre_icon_custom')||'';
+if(cimg){
+var orbSvg='<img src="'+cimg+'" width="22" height="22" style="border-radius:50%;object-fit:cover">';
+document.getElementById('orbBtn').innerHTML=orbSvg;
+LS.setItem('wre_icon_svg',JSON.stringify(orbSvg));
+init_icon();
+toast('图标已更换');
+return;
+}
+}
 var svg=allIcons[id]||allIcons.apple;
 var orbSvg='<svg viewBox="0 0 24 24" width="22" height="22">'+svg+'</svg>';
 document.getElementById('orbBtn').innerHTML=orbSvg;
@@ -703,6 +730,52 @@ LS.setItem('wre_icon_svg',JSON.stringify(orbSvg));
 init_icon();
 toast('图标已更换');
 };
+
+window.uploadIcon=function(inp){
+if(!inp.files||!inp.files[0])return;
+var reader=new FileReader();
+reader.onload=function(e){
+var img=e.target.result;
+var orbSvg='<img src="'+img+'" width="22" height="22" style="border-radius:50%;object-fit:cover">';
+document.getElementById('orbBtn').innerHTML=orbSvg;
+LS.setItem('wre_icon','custom');
+LS.setItem('wre_icon_svg',JSON.stringify(orbSvg));
+LS.setItem('wre_icon_custom',img);
+init_icon();
+toast('自定义图标已设置');
+};
+reader.readAsDataURL(inp.files[0]);
+};
+
+window.init_style=function(){
+var styles=[
+{n:'古风古韵',d:'古典白话为底，辞藻华丽对仗意境'},
+{n:'快意江湖',d:'刀光剑影写儿女情长，武打劲道对白利落'},
+{n:'仙道长歌',d:'仙气飘渺道法自然，文字清冷悠远'},
+{n:'淡水幸福',d:'平实语言写最深感情，人间烟火气'},
+{n:'酸涩虐恋',d:'刀子嵌在甜里，每句情话像回旋镖'},
+{n:'晋江言情',d:'丰盛细腻节奏张弛有度，糖分精准'},
+{n:'潮湿岛屿',d:'黏腻温热，暧昧欲望说不清的情感'},
+{n:'县城文学',d:'小镇青年困顿与挣扎，方言感粗粝质地'},
+{n:'霓虹冷硬',d:'都市丛林孤独猎人，语言干脆场景冷峻'},
+{n:'艳尸美学',d:'死亡与爱欲交缠，文字妖冶带鬼气'},
+{n:'颓靡华丽',d:'腐烂的玫瑰也是玫瑰，堕落中寻找美感'},
+{n:'地下独白',d:'密集撕裂的内心独白，灵魂在纸上痉挛'},
+{n:'电影镜头',d:'长镜头特写切换，沉浸式阅读体验'},
+{n:'荒诞现实',d:'人物在现实重压下变形'},
+{n:'失败哲人',d:'西伯利亚冻土疲惫观察者，旷远内省'},
+{n:'痞子浪漫',d:'语言调皮，诗意与流氓并存'},
+{n:'忠诚狗狗',d:'像小狗一样友好忠诚超爱你'},
+{n:'物质崇拜',d:'剧情浮夸详标品牌质感'},
+{n:'轻松网文',d:'配角有脑爽但不无聊'},
+{n:'无脑爽文',d:'主角开挂装逼打脸，纯粹多巴胺'},
+{n:'日系轻小说',d:'中二病日常擅吐槽，高密度对话'}
+];
+var cur=LS.getItem('wre_style')||'暂未选择';
+var body=document.getElementById('styleBody');
+body.innerHTML='<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:10px;text-align:center;margin-bottom:8px"><div style="font-size:10px;color:rgba(160,152,140,.5);letter-spacing:2px;margin-bottom:3px">当前启用</div><div style="font-size:16px;color:rgba(238,232,218,.9);font-weight:500">'+cur+'</div></div><div style="display:flex;flex-direction:column;gap:3px">'+styles.map(function(s){return'<div style="padding:7px 9px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:7px;cursor:pointer" onclick="pickStyle(\''+s.n+'\')"><div style="font-size:12px;color:rgba(238,232,218,.9)">'+s.n+(s.n===cur?' ✓':'')+'</div><div style="font-size:10px;color:rgba(160,152,140,.5);margin-top:1px">'+s.d+'</div></div>';}).join('')+'</div>';
+};
+window.pickStyle=function(n){LS.setItem('wre_style',n);init_style();toast('已切换: '+n);};
 
 window.init_achieve=function(){
 var achs=JSON.parse(LS.getItem('wre_achv')||'[]');
