@@ -79,7 +79,7 @@ function gPanel(data){
 var p=String(data||'').split('|');
 var rank=p[0]||'未知',title=p[1]||'',comment=p[2]||'',equipsRaw=p[3]||'',attrsRaw=p[4]||'';
 var allSlots=['发型','饰品','妆容','上衣','下装','连衣裙','袜类','鞋子','特殊'];
-var allAttrs=['智力','魅力','体质','力量','敏捷','意志','幸运'];
+var allAttrs=['智力','魅力','体质','力量','敏捷','魔力','意志','幸运'];
 var equipMap={},attrMap={},savedAttrs={};
 try{savedAttrs=JSON.parse(LS.getItem('wattr')||'{}')}catch(x){}
 var eL=equipsRaw.split(',');for(var i=0;i<eL.length;i++){if(!eL[i])continue;var s=eL[i].split('~');if(s[0])equipMap[s[0]]=s[1]||'无';}
