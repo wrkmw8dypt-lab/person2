@@ -115,23 +115,30 @@ window.rollFd=function(){var FD=window.FOOD_DATA||{};var all=[];Object.keys(FD).
 
 window.init_cmd=function(){
 var cmds=[
-{cmd:'/rnd',name:'随机事件',desc:'随机触发恋爱/日常/脑洞事件'},
-{cmd:'/drama',name:'狗血剧本',desc:'身份错位/记忆错位反转剧情'},
-{cmd:'/cmd',name:'调教模型',desc:'自然语言调整AI叙事风格'},
-{cmd:'/fix',name:'修复',desc:'修复界面错位或角色出戏'},
-{cmd:'/update',name:'同步协议',desc:'自动同步最新系统规则'},
-{cmd:'/sum',name:'总结剧情',desc:'生成详细剧情存档用于换挡'},
-{cmd:'/auto',name:'自动推进',desc:'AI接管推进 /auto_no关闭'},
+{cmd:'【朋友圈】',name:'朋友圈',desc:'查看角色动态，点赞评论互动'},
+{cmd:'【论坛】',name:'论坛',desc:'快穿者论坛/AO3/微博 角色帖子'},
 {cmd:'【商城】',name:'商城',desc:'查看并购买道具'},
 {cmd:'【地图】',name:'地图',desc:'当前世界区域一览'},
-{cmd:'【查询xx】',name:'NPC档案',desc:'查看角色信息'},
-{cmd:'【朋友圈】',name:'朋友圈',desc:'角色动态与评论'},
-{cmd:'【虚拟触摸】',name:'虚拟触摸',desc:'选择部位触发角色反应'}, 
-{cmd:'【论坛】',name:'论坛',desc:'快穿者论坛/AO3/微博 角色动态'},
+{cmd:'【查询xx】',name:'NPC档案',desc:'查看角色信息摘要'},
+{cmd:'【虚拟触摸】',name:'虚拟触摸',desc:'选择部位触发角色反应'},
 {cmd:'【文风更换】',name:'更换文风',desc:'【文风更换为：文风名】'},
-{cmd:'【退出世界】',name:'退出/进入',desc:'离开或进入世界'}
+{cmd:'【私聊/群聊】',name:'私聊/群聊',desc:'古代修仙自动变为书信/灵玉传音'},
+{cmd:'【招募同伴】',name:'招募同伴',desc:'邀请小说土著成为快穿者'},
+{cmd:'【组队】',name:'组队申请',desc:'与其他快穿者一起进入世界'},
+{cmd:'【退出世界】',name:'退出世界',desc:'结算任务并回到管理局'},
+{cmd:'【背包回收】',name:'背包回收',desc:'贱卖道具换积分'},
+{cmd:'【实力榜】',name:'榜单',desc:'实力榜/颜值榜'},
 ];
-document.getElementById('cmdBody').innerHTML='<div style="font-size:11px;color:rgba(195,185,168,.68);line-height:1.5;margin-bottom:8px;padding:8px 10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:8px">所有 <span style="color:var(--go)">【】</span> 格式均为指令触发。<span style="color:var(--go)">/斜线</span> 指令直接输入即可。</div>'+cmds.map(function(c){return'<div style="display:flex;align-items:flex-start;gap:6px;padding:6px 8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:7px;margin-bottom:3px"><span style="font-family:var(--ffm);font-size:10px;padding:2px 5px;border-radius:3px;background:rgba(200,192,178,.6);color:rgba(12,10,18,.85);flex-shrink:0;margin-top:1px">'+c.cmd+'</span><div style="flex:1"><div style="font-size:12px;color:rgba(238,232,218,.9)">'+c.name+'</div><div style="font-size:10px;color:rgba(160,152,140,.5)">'+c.desc+'</div></div></div>';}).join('');
+var slashes=[
+{cmd:'/rnd',desc:'随机触发恋爱/日常/脑洞事件'},
+{cmd:'/drama',desc:'狗血剧本，身份错位反转剧情'},
+{cmd:'/cmd',desc:'调教模型使其听话'},
+{cmd:'/fix',desc:'修复UI错位与角色OOC'},
+{cmd:'/update',desc:'强制同步最新协议'},
+{cmd:'/sum',desc:'总结剧情，用于换挡'},
+{cmd:'/auto',desc:'自动推进，/auto_no关闭'}
+];
+document.getElementById('cmdBody').innerHTML='<div style="font-size:11px;color:rgba(195,185,168,.68);line-height:1.6;margin-bottom:8px;padding:8px 10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:8px">使用 <span style="color:var(--go)">【任意内容】</span> 均为指令触发<br><span style="color:var(--go)">/斜线</span> 指令直接在聊天框输入</div><div style="font-size:10px;color:rgba(160,152,140,.6);letter-spacing:1.5px;margin:6px 0 4px">【】指令</div>'+cmds.map(function(c){return'<div style="display:flex;align-items:flex-start;gap:6px;padding:6px 8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:7px;margin-bottom:3px"><span style="font-family:var(--ffm);font-size:10px;padding:2px 5px;border-radius:3px;background:rgba(200,192,178,.6);color:rgba(12,10,18,.85);flex-shrink:0;margin-top:1px">'+c.cmd+'</span><div style="flex:1"><div style="font-size:12px;color:rgba(238,232,218,.9)">'+c.name+'</div><div style="font-size:10px;color:rgba(160,152,140,.5)">'+c.desc+'</div></div></div>';}).join('')+'<div style="font-size:10px;color:rgba(160,152,140,.6);letter-spacing:1.5px;margin:10px 0 4px">/斜线指令</div>'+slashes.map(function(s){return'<div style="display:flex;align-items:center;gap:6px;padding:6px 8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:7px;margin-bottom:3px"><span style="font-family:var(--ffm);font-size:10px;padding:2px 5px;border-radius:3px;background:rgba(128,195,165,.55);color:rgba(12,10,18,.85);flex-shrink:0">'+s.cmd+'</span><div style="flex:1;font-size:10px;color:rgba(195,185,168,.68)">'+s.desc+'</div></div>';}).join('');
 };
 
 window.init_bag=function(){
