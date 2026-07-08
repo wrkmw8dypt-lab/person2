@@ -88,10 +88,21 @@ pr.appendChild(d);
 document.getElementById('cpick').oninput=function(){applyC(this.value);};
 
 var fcPresets=[
-{c:'rgba(240,235,222,.91)',n:'暖白'},{c:'rgba(255,255,255,.92)',n:'纯白'},
-{c:'rgba(245,240,230,.9)',n:'象牙'},{c:'rgba(220,215,200,.85)',n:'宣纸'},
-{c:'rgba(200,195,180,.8)',n:'麻色'},{c:'rgba(180,175,165,.75)',n:'烟灰'},
-{c:'rgba(140,138,135,.7)',n:'深灰'},{c:'rgba(100,98,95,.85)',n:'炭灰'}
+{c:'rgba(240,235,222,.91)',n:'暖白'},
+{c:'rgba(255,255,255,.92)',n:'纯白'},
+{c:'rgba(245,240,230,.9)',n:'象牙'},
+{c:'rgba(220,215,200,.85)',n:'宣纸'},
+{c:'rgba(200,195,180,.8)',n:'麻色'},
+{c:'rgba(180,175,165,.75)',n:'烟灰'},
+{c:'rgba(140,138,135,.7)',n:'深灰'},
+{c:'rgba(100,98,95,.85)',n:'炭灰'},
+{c:'rgba(60,58,55,.9)',n:'墨'},
+{c:'rgba(30,28,25,.95)',n:'纯黑'},
+{c:'rgba(210,200,180,.85)',n:'古卷'},
+{c:'rgba(195,185,168,.8)',n:'旧纸'},
+{c:'rgba(225,220,210,.88)',n:'月白'},
+{c:'rgba(175,168,155,.78)',n:'青灰'},
+{c:'rgba(160,155,145,.72)',n:'石灰'}
 ];
 var curFc=LS.getItem('wre_fc')||'rgba(240,235,222,.91)';
 var fcRow=document.getElementById('fcRow');
@@ -246,50 +257,50 @@ var allSlots=slots||WD[topCat][subCats[0]]||{};
 h+='<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:6px 10px">';
 Object.keys(allSlots).forEach(function(slot){
 var sv=sel[slot]||'';
-h+='<div style="padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04)">';
-h+='<div style="display:flex;align-items:center;gap:4px;margin-bottom:3px">';
-h+='<span style="font-size:10px;color:rgba(160,152,140,.6);width:52px;flex-shrink:0;text-align:right">'+esc(slot)+'</span>';
-h+='<span style="font-size:12px;cursor:pointer;flex-shrink:0" onclick="rollWdName(\''+esc(slot)+'\')">🎲</span>';
+h+='<div style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)">';
+h+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">';
+h+='<span style="font-size:10px;color:rgba(160,152,140,.6)">'+esc(slot)+'</span>';
+h+='<span style="font-size:12px;cursor:pointer" onclick="rollWdName(\''+esc(slot)+'\')">🎲</span>';
 h+='</div>';
 if(sv){
-h+='<div style="padding:3px 8px;margin-left:56px;border-radius:5px;border:1px solid rgba(255,255,255,.08);font-size:10px;color:rgba(238,232,218,.9);line-height:1.6;word-break:break-all">'+esc(sv)+'</div>';
+h+='<div style="padding:5px 8px;border-radius:6px;border:1px solid rgba(255,255,255,.08);font-size:11px;color:rgba(238,232,218,.9);line-height:1.6;word-break:break-all">'+esc(sv)+'</div>';
 }else{
-h+='<div style="padding:3px 8px;margin-left:56px;font-size:10px;color:rgba(160,152,140,.5)">点击🎲随机</div>';
+h+='<div style="padding:5px 8px;font-size:10px;color:rgba(160,152,140,.4)">点击🎲随机</div>';
 }
 h+='</div>';
 });
 h+='</div>';
-
-var previewParts=[];
-Object.keys(sel).forEach(function(k){if(sel[k]&&k.indexOf('__')!==0)previewParts.push(k+'：'+sel[k]);});
-if(previewParts.length){
-h+='<div style="margin-top:8px;font-size:11px;color:rgba(195,185,168,.68);line-height:1.8;min-height:14px">';
-h+=previewParts.map(function(p){return esc(p);}).join('<br>');
-h+='</div>';
-}
 
 if(isDungeon){
 var curDiff=sel['__diff__']||'';
 var curReward=sel['__reward__']||'';
 var curPenalty=sel['__penalty__']||'';
 h+='<div style="margin-top:6px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:8px 10px">';
-h+='<div style="display:flex;align-items:center;gap:4px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.04)">';
-h+='<span style="font-size:10px;color:rgba(160,152,140,.6);width:52px;flex-shrink:0;text-align:right">难度</span>';
-h+='<span style="padding:2px 5px;border-radius:4px;border:1px solid rgba(255,255,255,.08);font-size:10px;color:'+(curDiff?'rgba(238,232,218,.9)':'rgba(160,152,140,.5)')+';flex:1">'+esc(curDiff||'点击🎲')+'</span>';
-h+='<span style="font-size:12px;cursor:pointer" onclick="rollDungeonMeta(\'diff\')">🎲</span></div>';
-h+='<div style="display:flex;align-items:center;gap:4px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.04)">';
-h+='<span style="font-size:10px;color:rgba(160,152,140,.6);width:52px;flex-shrink:0;text-align:right">奖励</span>';
-h+='<span style="padding:2px 5px;border-radius:4px;border:1px solid rgba(255,255,255,.08);font-size:11px;color:'+(curReward?'rgba(180,220,160,.95)':'rgba(160,152,140,.5)')+';flex:1">'+esc(curReward||'点击🎲')+'</span>';
-h+='<span style="font-size:12px;cursor:pointer" onclick="rollDungeonMeta(\'reward\')">🎲</span></div>';
-h+='<div style="display:flex;align-items:center;gap:4px;padding:3px 0">';
-h+='<span style="font-size:10px;color:rgba(160,152,140,.6);width:52px;flex-shrink:0;text-align:right">惩罚</span>';
-h+='<span style="padding:2px 5px;border-radius:4px;border:1px solid rgba(255,255,255,.08);font-size:11px;color:'+(curPenalty?'rgba(225,150,140,.95)':'rgba(160,152,140,.5)')+';flex:1">'+esc(curPenalty||'点击🎲')+'</span>';
-h+='<span style="font-size:12px;cursor:pointer" onclick="rollDungeonMeta(\'penalty\')">🎲</span></div>';
+h+='<div style="padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04)">';
+h+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px"><span style="font-size:10px;color:rgba(160,152,140,.6)">难度</span><span style="font-size:12px;cursor:pointer" onclick="rollDungeonMeta(\'diff\')">🎲</span></div>';
+h+='<div style="padding:5px 8px;border-radius:6px;border:1px solid rgba(255,255,255,.08);font-size:11px;color:'+(curDiff?'rgba(238,232,218,.9)':'rgba(160,152,140,.4)')+';line-height:1.6">'+esc(curDiff||'点击🎲')+'</div></div>';
+h+='<div style="padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04)">';
+h+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px"><span style="font-size:10px;color:rgba(160,152,140,.6)">奖励</span><span style="font-size:12px;cursor:pointer" onclick="rollDungeonMeta(\'reward\')">🎲</span></div>';
+h+='<div style="padding:5px 8px;border-radius:6px;border:1px solid rgba(255,255,255,.08);font-size:11px;color:'+(curReward?'rgba(180,220,160,.95)':'rgba(160,152,140,.4)')+';line-height:1.6">'+esc(curReward||'点击🎲')+'</div></div>';
+h+='<div style="padding:5px 0">';
+h+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px"><span style="font-size:10px;color:rgba(160,152,140,.6)">惩罚</span><span style="font-size:12px;cursor:pointer" onclick="rollDungeonMeta(\'penalty\')">🎲</span></div>';
+h+='<div style="padding:5px 8px;border-radius:6px;border:1px solid rgba(255,255,255,.08);font-size:11px;color:'+(curPenalty?'rgba(225,150,140,.95)':'rgba(160,152,140,.4)')+';line-height:1.6">'+esc(curPenalty||'点击🎲')+'</div></div>';
+h+='</div>';
+}
+
+var previewParts=[];
+Object.keys(sel).forEach(function(k){if(sel[k]&&k.indexOf('__')!==0)previewParts.push(k+'：'+sel[k]);});
+if(sel['__diff__']) previewParts.push('难度：'+sel['__diff__']);
+if(sel['__reward__']) previewParts.push('奖励：'+sel['__reward__']);
+if(sel['__penalty__']) previewParts.push('惩罚：'+sel['__penalty__']);
+if(previewParts.length){
+h+='<div style="margin-top:8px;font-size:11px;color:rgba(195,185,168,.68);line-height:1.8">';
+h+=previewParts.map(function(p){return esc(p);}).join('<br>');
 h+='</div>';
 }
 
 h+='<div style="display:flex;gap:5px;margin-top:6px">';
-h+='<div style="flex:1;padding:7px;background:rgba(200,192,178,.08);border:1px solid rgba(200,192,178,.3);border-radius:8px;font-size:11px;color:var(--go);cursor:pointer;text-align:center" onclick="rollWdAll()">全部随机</div>';
+h+='<div style="flex:1;padding:7px;background:rgba(200,192,178,.08);border:1px solid rgba(200,192,178,.3);border-radius:8px;font-size:11px;color:var(--go);cursor:pointer;text-align:center" onclick="rollWdAllKeepScroll()">全部随机</div>';
 h+='<div style="flex:1;padding:7px;background:rgba(200,192,178,.08);border:1px solid rgba(200,192,178,.3);border-radius:8px;font-size:11px;color:var(--go);cursor:pointer;text-align:center" onclick="copyWd()">一键复制</div>';
 h+='<div style="flex:1;padding:7px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:8px;font-size:11px;color:rgba(160,152,140,.6);cursor:pointer;text-align:center" onclick="clearWd()">清空</div>';
 h+='</div>';
@@ -310,7 +321,7 @@ var cv=col[slot]||'';
 h+='<div style="display:flex;align-items:center;gap:4px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04)">';
 h+='<span style="font-size:10px;color:rgba(160,152,140,.6);width:30px;flex-shrink:0;text-align:right">'+esc(slot)+'</span>';
 if(needColor){
-h+='<span style="padding:2px 5px;border-radius:4px;border:1px solid rgba(255,255,255,.08);font-size:10px;color:rgba(195,185,168,.68);min-width:28px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(cv||'色')+'</span>';
+h+='<span style="padding:2px 5px;border-radius:4px;border:1px solid rgba(255,255,255,.08);font-size:10px;color:rgba(195,185,168,.68);min-width:28px;text-align:center">'+esc(cv||'色')+'</span>';
 h+='<span style="font-size:12px;cursor:pointer" onclick="rollWdCol(\''+esc(slot)+'\')">🎲</span>';
 }
 h+='<span style="padding:2px 5px;border-radius:4px;border:1px solid rgba(255,255,255,.08);font-size:10px;color:'+(sv?'rgba(238,232,218,.9)':'rgba(160,152,140,.5)')+';flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(sv||'点击🎲随机')+'</span>';
@@ -320,19 +331,14 @@ h+='</div>';
 h+='</div>';
 }
 var previewParts2=[];
-Object.keys(sel).forEach(function(k){
-if(sel[k]){
-var c=col[k];
-previewParts2.push(esc(k)+'：'+esc((c?c:'')+sel[k]));
-}
-});
+Object.keys(sel).forEach(function(k){if(sel[k]){var c=col[k];previewParts2.push(k+'：'+(c?c:'')+sel[k]);}});
 if(previewParts2.length){
-h+='<div style="margin-top:8px;font-size:11px;color:rgba(195,185,168,.68);line-height:1.8;min-height:14px">';
-h+=previewParts2.join('<br>');
+h+='<div style="margin-top:8px;font-size:11px;color:rgba(195,185,168,.68);line-height:1.8">';
+h+=previewParts2.map(function(p){return esc(p);}).join('<br>');
 h+='</div>';
 }
 h+='<div style="display:flex;gap:5px;margin-top:6px">';
-h+='<div style="flex:1;padding:7px;background:rgba(200,192,178,.08);border:1px solid rgba(200,192,178,.3);border-radius:8px;font-size:11px;color:var(--go);cursor:pointer;text-align:center" onclick="rollWdAll()">全部随机</div>';
+h+='<div style="flex:1;padding:7px;background:rgba(200,192,178,.08);border:1px solid rgba(200,192,178,.3);border-radius:8px;font-size:11px;color:var(--go);cursor:pointer;text-align:center" onclick="rollWdAllKeepScroll()">全部随机</div>';
 h+='<div style="flex:1;padding:7px;background:rgba(200,192,178,.08);border:1px solid rgba(200,192,178,.3);border-radius:8px;font-size:11px;color:var(--go);cursor:pointer;text-align:center" onclick="copyWd()">一键复制</div>';
 h+='<div style="flex:1;padding:7px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:8px;font-size:11px;color:rgba(160,152,140,.6);cursor:pointer;text-align:center" onclick="clearWd()">清空</div>';
 h+='</div>';
@@ -366,6 +372,8 @@ init_wardrobe();
 window.rollWdCol=function(slot){var colors=window.WD_COLORS||['白','黑'];var c=colors[Math.floor(Math.random()*colors.length)];var col=JSON.parse(LS.getItem('wre_wdcol')||'{}');col[slot]=c;LS.setItem('wre_wdcol',JSON.stringify(col));init_wardrobe();};
 
 window.rollWdName=function(slot){
+var body=document.getElementById('wardrobeBody');
+var sb=body?body.scrollTop:0;
 var topCat=LS.getItem('wre_wdtop')||Object.keys(window.WD_DATA||{})[0];
 var tab=LS.getItem('wre_wdtab')||'';
 var WD=window.WD_DATA;
@@ -379,6 +387,14 @@ var sel=JSON.parse(LS.getItem('wre_wdsel')||'{}');
 sel[slot]=items[Math.floor(Math.random()*items.length)];
 LS.setItem('wre_wdsel',JSON.stringify(sel));
 init_wardrobe();
+if(body) body.scrollTop=sb;
+};
+
+window.rollWdAllKeepScroll=function(){
+var body=document.getElementById('wardrobeBody');
+var sb=body?body.scrollTop:0;
+rollWdAll();
+if(body) setTimeout(function(){body.scrollTop=sb;},0);
 };
 
 window.rollWdAll=function(){
@@ -413,6 +429,8 @@ init_wardrobe();
 };
 
 window.rollDungeonMeta=function(type){
+var body=document.getElementById('wardrobeBody');
+var sb=body?body.scrollTop:0;
 var sel=JSON.parse(LS.getItem('wre_wdsel')||'{}');
 var difficulties=['E','D','C','B','A','S','SS','SSS'];
 var rewards=['积分×200','积分×500','积分×1000','稀有道具×1','属性点×3','属性点×5','限定称号','SSR装备抽取券','好感度道具×2','随机技能书','变装卡×1','复活币×1','积分×300+随机道具','幸运星×5','全属性+1药水','指定角色好感+10','隐藏剧情解锁券','限时双倍积分卡','传送符×3','金色宝箱钥匙','神秘礼包·不知道开出什么','角色专属语音·限定','ta的贴身物品·用途不明','对方的一个秘密','强制告白卡·对方必须回应','红线检测器·查看隐藏好感','月光宝盒·回溯一轮剧情','剧本修改权×1','NPC临时雇佣券','全服广播权×1'];
@@ -422,6 +440,7 @@ if(type==='reward') sel['__reward__']=rewards[Math.floor(Math.random()*rewards.l
 if(type==='penalty') sel['__penalty__']=penalties[Math.floor(Math.random()*penalties.length)];
 LS.setItem('wre_wdsel',JSON.stringify(sel));
 init_wardrobe();
+if(body) body.scrollTop=sb;
 };
 
 window.copyWd=function(){
