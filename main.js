@@ -1032,7 +1032,6 @@ var appDefs=[
 {id:'bag',label:'背包',svg:'<rect x="5" y="10" width="16" height="12" rx="3" stroke="CL" stroke-width="1.5" fill="none"/><path d="M9 10V8a4 4 0 018 0v2" stroke="CL" stroke-width="1.5" stroke-linecap="round" fill="none"/><path d="M13 14v4M11 16h4" stroke="CL" stroke-width="1.2" stroke-linecap="round" fill="none"/>',c:'rgba(155,150,170,.5)'},
 {id:'style',label:'文风',svg:'<path d="M5 19l5-14 3 7 3-4 5 11" stroke="CL" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',c:'rgba(150,170,175,.5)'},
 {id:'icon',label:'换图标',svg:'<rect x="5" y="5" width="16" height="16" rx="4" stroke="CL" stroke-width="1.5" fill="none"/><circle cx="10" cy="12" r="2" stroke="CL" stroke-width="1.2" fill="none"/><path d="M14 9h4M14 12h4M14 15h4" stroke="CL" stroke-width="1.2" stroke-linecap="round" fill="none"/>',c:'rgba(170,160,155,.5)'},
-{id:'plot',label:'剧情',svg:'<path d="M6 4h12v2H6zM6 9h8v2H6zM6 14h10v2H6z" stroke="CL" stroke-width="1.3" stroke-linecap="round" fill="none"/><circle cx="19" cy="15" r="3" stroke="CL" stroke-width="1.2" fill="none"/><path d="M18 15l1 1 2-2" stroke="CL" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',c:'rgba(180,145,155,.5)'},
 {id:'achieve',label:'成就',svg:'<path d="M13 3l2.5 5 5.5.8-4 3.9 1 5.5L13 15.7 7.8 18.2l1-5.5-4-3.9 5.5-.8z" stroke="CL" stroke-width="1.5" fill="none" stroke-linejoin="round"/>',c:'rgba(165,155,145,.5)'}
 ];
 
