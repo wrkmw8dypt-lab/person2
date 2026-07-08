@@ -395,7 +395,7 @@ h+='<div class="cfav-track">';
 h+='<div class="cfav-fill" style="width:'+favPct+'%"></div></div>';
 h+='<span class="cfav-num">'+favNum+'/100</span></div>';
 }
-var coText=c.inner||'';
+var coText=c.thought||'';
 if(coText.charAt(0)==='('&&coText.charAt(coText.length-1)===')') coText=coText.substring(1,coText.length-1);
 h+='<div class="co">'+esc(coText)+'</div>';
 h+='</div></div>';
