@@ -26,38 +26,55 @@ function updPreview(){var c=LS.getItem('wre_color')||'#c8c0b2';var fc=LS.getItem
 window.applyC=function(c){LS.setItem('wre_color',c);document.getElementById('chex').textContent=c;document.documentElement.style.setProperty('--go',hexToRgba(c,.88));document.documentElement.style.setProperty('--gd',hexToRgba(c,.35));updPreview();};
 window.updBlur=function(){var v=document.getElementById('blurS').value;document.getElementById('blurV').textContent=v+'px';LS.setItem('wre_blur',v);var bg=document.getElementById('prevBg');if(bg){bg.style.backdropFilter='blur('+v+'px)';bg.style.webkitBackdropFilter='blur('+v+'px)';}};
 window.chgFs=function(d){var f=parseInt(LS.getItem('wre_fs')||'14');f=Math.max(11,Math.min(18,f+d));LS.setItem('wre_fs',String(f));document.getElementById('fsV').textContent=f+'px';document.documentElement.style.fontSize=f+'px';var r=document.getElementById('R');if(r)r.style.fontSize=f+'px';};
-window.loadWp=function(inp){var f=inp.files[0];if(!f)return;var r=new FileReader();r.onload=function(e){try{LS.setItem('wre_wp',e.target.result)}catch(x){}document.getElementById('wpPrev').innerHTML='<img src="'+e.target.result+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">';};r.readAsDataURL(f);};
+window.loadWp=function(inp){var f=inp.files[0];if(!f)return;var r=new FileReader();r.onload=function(e){try{LS.setItem('wre_wp',e.target.result)}catch(x){}document.getElementById('wpPrev').innerHTML='<img src="'+e.target.result+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">';var hs=document.getElementById('homeScreen');if(hs){hs.style.backgroundImage='url('+e.target.result+')';hs.style.backgroundSize='cover';hs.style.backgroundPosition='center';}};r.readAsDataURL(f);};
 
 window.init_wardrobe=function(){
 var body=document.getElementById('wardrobeBody');
-var tab=LS.getItem('wre_wdtab')||'古风';
+var WD=window.WD_DATA;if(!WD){body.innerHTML='加载中...';return;}
+var allCats=Object.keys(WD);
+var topCat=LS.getItem('wre_wdtop')||allCats[0];
+var subCats=Object.keys(WD[topCat]||{});
+var tab=LS.getItem('wre_wdtab')||subCats[0]||'';
 var sel=JSON.parse(LS.getItem('wre_wdsel')||'{}');
 var col=JSON.parse(LS.getItem('wre_wdcol')||'{}');
-var WD=window.WD_DATA;if(!WD){body.innerHTML='加载中...';return;}
-var slots=WD[tab];if(!slots){body.innerHTML='无数据';return;}
-var h='<div style="display:flex;gap:4px;margin-bottom:8px">';
-Object.keys(WD).forEach(function(t){h+='<div style="flex:1;padding:4px;text-align:center;font-size:11px;border-radius:6px;border:1px solid '+(t===tab?'rgba(200,192,178,.3)':'rgba(255,255,255,.07)')+';color:'+(t===tab?'var(--go)':'rgba(160,152,140,.6)')+';cursor:pointer" onclick="swWdTab(\''+t+'\')">'+t+'</div>';});
-h+='</div><div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:6px 10px">';
+if(!WD[topCat]){body.innerHTML='无数据';return;}
+var slots=WD[topCat][tab];
+var h='<div style="display:flex;gap:3px;overflow-x:auto;margin-bottom:6px;padding-bottom:2px;-webkit-overflow-scrolling:touch">';
+allCats.forEach(function(c){h+='<div style="font-size:10px;padding:3px 8px;border-radius:12px;border:1px solid '+(c===topCat?'rgba(200,192,178,.35)':'rgba(255,255,255,.07)')+';color:'+(c===topCat?'var(--go)':'rgba(160,152,140,.5)')+';cursor:pointer;white-space:nowrap;flex-shrink:0" onclick="swWdTop(\''+c+'\')">'+c+'</div>';});
+h+='</div>';
+if(subCats.length>1){
+h+='<div style="display:flex;gap:3px;overflow-x:auto;margin-bottom:6px;padding-bottom:2px;-webkit-overflow-scrolling:touch">';
+subCats.forEach(function(t){h+='<div style="font-size:10px;padding:2px 6px;border-radius:6px;border:1px solid '+(t===tab?'rgba(200,192,178,.25)':'rgba(255,255,255,.05)')+';color:'+(t===tab?'rgba(238,232,218,.9)':'rgba(160,152,140,.4)')+';cursor:pointer;white-space:nowrap;flex-shrink:0" onclick="swWdTab(\''+t+'\')">'+t+'</div>';});
+h+='</div>';
+}
+if(slots){
+var needColor=!!window.WD_COLORS&&(topCat.indexOf('衣橱')>=0);
+h+='<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:6px 10px">';
 Object.keys(slots).forEach(function(slot){
 var sv=sel[slot]||'';var cv=col[slot]||'';
 h+='<div style="display:flex;align-items:center;gap:4px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04)">';
-h+='<span style="font-size:10px;color:rgba(160,152,140,.6);width:26px;flex-shrink:0;text-align:right">'+slot+'</span>';
-h+='<span style="padding:2px 5px;border-radius:4px;border:1px solid rgba(255,255,255,.08);font-size:10px;color:rgba(195,185,168,.68);min-width:32px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(cv||'颜色')+'</span>';
+h+='<span style="font-size:10px;color:rgba(160,152,140,.6);width:30px;flex-shrink:0;text-align:right">'+slot+'</span>';
+if(needColor){
+h+='<span style="padding:2px 5px;border-radius:4px;border:1px solid rgba(255,255,255,.08);font-size:10px;color:rgba(195,185,168,.68);min-width:28px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(cv||'色')+'</span>';
 h+='<span style="font-size:12px;cursor:pointer" onclick="rollWdCol(\''+slot+'\')">🎲</span>';
-h+='<span style="padding:2px 5px;border-radius:4px;border:1px solid rgba(255,255,255,.08);font-size:10px;color:'+(sv?'rgba(238,232,218,.9)':'rgba(160,152,140,.5)')+';flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(sv||'款式')+'</span>';
+}
+h+='<span style="padding:2px 5px;border-radius:4px;border:1px solid rgba(255,255,255,.08);font-size:10px;color:'+(sv?'rgba(238,232,218,.9)':'rgba(160,152,140,.5)')+';flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(sv||'点击🎲随机')+'</span>';
 h+='<span style="font-size:12px;cursor:pointer" onclick="rollWdName(\''+slot+'\')">🎲</span>';
 h+='</div>';
 });
 h+='</div>';
-var preview=Object.keys(sel).length?Object.keys(sel).map(function(k){return k+'~'+(col[k]||'')+sel[k];}).join(','):'尚未选择';
-h+='<div style="margin-top:8px;font-size:11px;color:rgba(195,185,168,.68);line-height:1.5;min-height:14px">'+esc(preview)+'</div><div style="margin-top:6px;width:100%;padding:7px;background:rgba(200,192,178,.08);border:1px solid rgba(200,192,178,.3);border-radius:8px;font-size:12px;color:var(--go);cursor:pointer;text-align:center" onclick="copyWd()">一键复制</div>';
+}
+var preview=Object.keys(sel).length?Object.keys(sel).map(function(k){var c=col[k];return(c?c:'')+ sel[k];}).join(' / '):'尚未选择';
+h+='<div style="margin-top:8px;font-size:11px;color:rgba(195,185,168,.68);line-height:1.5;min-height:14px">'+esc(preview)+'</div>';
+h+='<div style="display:flex;gap:6px;margin-top:6px"><div style="flex:1;padding:7px;background:rgba(200,192,178,.08);border:1px solid rgba(200,192,178,.3);border-radius:8px;font-size:12px;color:var(--go);cursor:pointer;text-align:center" onclick="rollWdAll()">全部随机</div><div style="flex:1;padding:7px;background:rgba(200,192,178,.08);border:1px solid rgba(200,192,178,.3);border-radius:8px;font-size:12px;color:var(--go);cursor:pointer;text-align:center" onclick="copyWd()">一键复制</div></div>';
 body.innerHTML=h;
 };
+window.swWdTop=function(c){LS.setItem('wre_wdtop',c);var WD=window.WD_DATA;var subs=Object.keys(WD[c]||{});LS.setItem('wre_wdtab',subs[0]||'');LS.setItem('wre_wdsel','{}');LS.setItem('wre_wdcol','{}');init_wardrobe();};
 window.swWdTab=function(t){LS.setItem('wre_wdtab',t);LS.setItem('wre_wdsel','{}');LS.setItem('wre_wdcol','{}');init_wardrobe();};
-window.rollWdCol=function(slot){var colors=window.WD_COLORS||['白','黑','灰','蓝','红'];var c=colors[Math.floor(Math.random()*colors.length)];var col=JSON.parse(LS.getItem('wre_wdcol')||'{}');col[slot]=c;LS.setItem('wre_wdcol',JSON.stringify(col));init_wardrobe();};
-window.rollWdName=function(slot){var tab=LS.getItem('wre_wdtab')||'古风';var WD=window.WD_DATA;if(!WD||!WD[tab])return;var items=WD[tab][slot];if(!items)return;var pick=items[Math.floor(Math.random()*items.length)];var sel=JSON.parse(LS.getItem('wre_wdsel')||'{}');sel[slot]=pick;LS.setItem('wre_wdsel',JSON.stringify(sel));init_wardrobe();};
-window.copyWd=function(){var sel=JSON.parse(LS.getItem('wre_wdsel')||'{}');var col=JSON.parse(LS.getItem('wre_wdcol')||'{}');var keys=Object.keys(sel);if(!keys.length)return;cp(keys.map(function(k){return k+'~'+(col[k]||'')+sel[k];}).join(','));toast('已复制');};
-
+window.rollWdCol=function(slot){var colors=window.WD_COLORS||['白','黑'];var c=colors[Math.floor(Math.random()*colors.length)];var col=JSON.parse(LS.getItem('wre_wdcol')||'{}');col[slot]=c;LS.setItem('wre_wdcol',JSON.stringify(col));init_wardrobe();};
+window.rollWdName=function(slot){var topCat=LS.getItem('wre_wdtop')||Object.keys(window.WD_DATA||{})[0];var tab=LS.getItem('wre_wdtab')||'';var WD=window.WD_DATA;if(!WD||!WD[topCat]||!WD[topCat][tab])return;var items=WD[topCat][tab][slot];if(!items)return;var pick=items[Math.floor(Math.random()*items.length)];var sel=JSON.parse(LS.getItem('wre_wdsel')||'{}');sel[slot]=pick;LS.setItem('wre_wdsel',JSON.stringify(sel));init_wardrobe();};
+window.rollWdAll=function(){var topCat=LS.getItem('wre_wdtop')||Object.keys(window.WD_DATA||{})[0];var tab=LS.getItem('wre_wdtab')||'';var WD=window.WD_DATA;if(!WD||!WD[topCat]||!WD[topCat][tab])return;var slots=WD[topCat][tab];var sel={},col={};var needColor=!!window.WD_COLORS&&(topCat.indexOf('衣橱')>=0);var colors=window.WD_COLORS||['白'];Object.keys(slots).forEach(function(slot){var items=slots[slot];sel[slot]=items[Math.floor(Math.random()*items.length)];if(needColor)col[slot]=colors[Math.floor(Math.random()*colors.length)];});LS.setItem('wre_wdsel',JSON.stringify(sel));LS.setItem('wre_wdcol',JSON.stringify(col));init_wardrobe();};
+window.copyWd=function(){var sel=JSON.parse(LS.getItem('wre_wdsel')||'{}');var col=JSON.parse(LS.getItem('wre_wdcol')||'{}');var keys=Object.keys(sel);if(!keys.length)return;cp(keys.map(function(k){var c=col[k];return k+'：'+(c?c:'')+ sel[k];}).join('，'));toast('已复制');};
 window.init_contacts=function(){
 var data=JSON.parse(LS.getItem('wre_contacts')||'{"groups":{"默认":[]}}');
 var body=document.getElementById('contactsBody');
