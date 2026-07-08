@@ -395,9 +395,9 @@ h+='<div class="cfav-track">';
 h+='<div class="cfav-fill" style="width:'+favPct+'%"></div></div>';
 h+='<span class="cfav-num">'+favNum+'/100</span></div>';
 }
-var innerText=b.d;
-if(innerText.charAt(0)==='('&&innerText.charAt(innerText.length-1)===')') innerText=innerText.substring(1,innerText.length-1);
-h+='<div class="co">'+esc(innerText)+'</div>';
+var coText=c.inner||'';
+if(coText.charAt(0)==='('&&coText.charAt(coText.length-1)===')') coText=coText.substring(1,coText.length-1);
+h+='<div class="co">'+esc(coText)+'</div>';
 h+='</div></div>';
 }
 h+='</div></details></div>';
