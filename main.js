@@ -1006,13 +1006,16 @@ var phc=LS.getItem('wre_ph_color');
 if(phc){
 var ht=document.getElementById('homeT');
 var hd=document.getElementById('homeD');
+var hl=document.querySelector('.ph-home-logo');
 if(ht) ht.style.color=phc;
 if(hd) hd.style.color=phc;
+if(hl) hl.style.color=phc;
+var labels=document.querySelectorAll('.app-i-label');
+for(var i=0;i<labels.length;i++) labels[i].style.color=phc;
 }
 var pic=LS.getItem('wre_ph_inner_color');
 if(pic){
-var pages=document.querySelectorAll('.app-body');
-pages.forEach(function(p){p.style.color=pic;});
+document.documentElement.style.setProperty('--pic',pic);
 }
 var wp2=LS.getItem('wre_wp2');
 if(wp2){
