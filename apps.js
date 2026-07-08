@@ -588,7 +588,7 @@ h+='<div style="width:4px;height:4px;border-radius:50%;background:'+(l.type==='i
 h+='<div style="flex:1;font-size:11px;color:rgba(238,232,218,.9);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(l.name)+'</div>';
 h+='<div style="font-family:var(--ffm);font-size:10px;color:'+(l.type==='inc'?'rgba(140,180,140,.9)':'rgba(190,130,125,.9)')+';flex-shrink:0">'+esc(l.amt)+'</div>';
 h+='<div style="font-size:9px;color:rgba(160,152,140,.4);flex-shrink:0">'+esc(l.time)+'</div>';
-h+='<div style="font-size:9px;color:rgba(190,130,125,.5);cursor:pointer;padding:2px 4px;flex-shrink:0" onclick="delLedgerItem(\''+esc(era)+'\','+li+')">×</div>';
+h+='<div style="font-size:14px;color:rgba(190,130,125,.5);cursor:pointer;padding:0 4px;flex-shrink:0;line-height:1" onclick="delLedgerItem(\''+esc(era)+'\','+li+')">×</div>';
 h+='</div>';
 });
 h+='</div>';
@@ -598,7 +598,11 @@ h+='<div style="text-align:center;margin-top:6px"><span style="font-size:10px;co
 }
 body.innerHTML=h;
 };
-window.swBagTab=function(t){LS.setItem('wre_bagtab',t);init_bag();};
+
+window.swBagTab=function(t){
+LS.setItem('wre_bagtab',t);
+init_bag();
+};
 
 window.delLedgerItem=function(era,idx){
 var ledger=JSON.parse(LS.getItem('wre_ledger')||'[]');
