@@ -1009,6 +1009,20 @@ var hd=document.getElementById('homeD');
 if(ht) ht.style.color=phc;
 if(hd) hd.style.color=phc;
 }
+var pic=LS.getItem('wre_ph_inner_color');
+if(pic){
+var pages=document.querySelectorAll('.app-body');
+pages.forEach(function(p){p.style.color=pic;});
+}
+var wp2=LS.getItem('wre_wp2');
+if(wp2){
+var pages2=document.querySelectorAll('.app-body');
+pages2.forEach(function(p){
+p.style.backgroundImage='url('+wp2+')';
+p.style.backgroundSize='cover';
+p.style.backgroundPosition='center';
+});
+}
 })();
 
 (function(){
