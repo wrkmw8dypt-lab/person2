@@ -748,34 +748,9 @@ reader.readAsDataURL(inp.files[0]);
 };
 
 window.init_style=function(){
-var styles=[
-{n:'古风古韵',d:'古典白话为底，辞藻华丽对仗意境'},
-{n:'快意江湖',d:'刀光剑影写儿女情长，武打劲道对白利落'},
-{n:'仙道长歌',d:'仙气飘渺道法自然，文字清冷悠远'},
-{n:'淡水幸福',d:'平实语言写最深感情，人间烟火气'},
-{n:'酸涩虐恋',d:'刀子嵌在甜里，每句情话像回旋镖'},
-{n:'晋江言情',d:'丰盛细腻节奏张弛有度，糖分精准'},
-{n:'潮湿岛屿',d:'黏腻温热，暧昧欲望说不清的情感'},
-{n:'县城文学',d:'小镇青年困顿与挣扎，方言感粗粝质地'},
-{n:'霓虹冷硬',d:'都市丛林孤独猎人，语言干脆场景冷峻'},
-{n:'艳尸美学',d:'死亡与爱欲交缠，文字妖冶带鬼气'},
-{n:'颓靡华丽',d:'腐烂的玫瑰也是玫瑰，堕落中寻找美感'},
-{n:'地下独白',d:'密集撕裂的内心独白，灵魂在纸上痉挛'},
-{n:'电影镜头',d:'长镜头特写切换，沉浸式阅读体验'},
-{n:'荒诞现实',d:'人物在现实重压下变形'},
-{n:'失败哲人',d:'西伯利亚冻土疲惫观察者，旷远内省'},
-{n:'痞子浪漫',d:'语言调皮，诗意与流氓并存'},
-{n:'忠诚狗狗',d:'像小狗一样友好忠诚超爱你'},
-{n:'物质崇拜',d:'剧情浮夸详标品牌质感'},
-{n:'轻松网文',d:'配角有脑爽但不无聊'},
-{n:'无脑爽文',d:'主角开挂装逼打脸，纯粹多巴胺'},
-{n:'日系轻小说',d:'中二病日常擅吐槽，高密度对话'}
-];
-var cur=LS.getItem('wre_style')||'暂未选择';
-var body=document.getElementById('styleBody');
-body.innerHTML='<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:10px;text-align:center;margin-bottom:8px"><div style="font-size:10px;color:rgba(160,152,140,.5);letter-spacing:2px;margin-bottom:3px">当前启用</div><div style="font-size:16px;color:rgba(238,232,218,.9);font-weight:500">'+cur+'</div></div><div style="display:flex;flex-direction:column;gap:3px">'+styles.map(function(s){return'<div style="padding:7px 9px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:7px;cursor:pointer" onclick="pickStyle(\''+s.n+'\')"><div style="font-size:12px;color:rgba(238,232,218,.9)">'+s.n+(s.n===cur?' ✓':'')+'</div><div style="font-size:10px;color:rgba(160,152,140,.5);margin-top:1px">'+s.d+'</div></div>';}).join('')+'</div>';
-};
-window.pickStyle=function(n){LS.setItem('wre_style',n);init_style();toast('已切换: '+n);};
+var styles=[{n:'古风古韵',d:'古典白话为底，辞藻华丽对仗意境'},{n:'快意江湖',d:'刀光剑影写儿女情长'},{n:'仙道长歌',d:'仙气飘渺道法自然'},{n:'淡水幸福',d:'平实语言写最深感情'},{n:'酸涩虐恋',d:'刀子嵌在甜里'},{n:'晋江言情',d:'丰盛细腻节奏张弛有度'},{n:'潮湿岛屿',d:'黏腻温热暧昧欲望'},{n:'县城文学',d:'小镇青年困顿与挣扎'},{n:'霓虹冷硬',d:'都市丛林孤独猎人'},{n:'艳尸美学',d:'死亡与爱欲交缠'},{n:'颓靡华丽',d:'腐烂的玫瑰也是玫瑰'},{n:'地下独白',d:'密集撕裂的内心独白'},{n:'电影镜头',d:'长镜头特写切换'},{n:'荒诞现实',d:'人物在现实重压下变形'},{n:'失败哲人',d:'西伯利亚冻土疲惫观察者'},{n:'痞子浪漫',d:'语言调皮诗意与流氓并存'},{n:'忠诚狗狗',d:'像小狗一样友好忠诚超爱你'},{n:'物质崇拜',d:'剧情浮夸详标品牌质感'},{n:'轻松网文',d:'配角有脑爽但不无聊'},{n:'无脑爽文',d:'主角开挂装逼打脸'},{n:'日系轻小说',d:'中二病日常擅吐槽'}];
+var cur=LS.getItem('wre_style_active')||'尚未设定';
+document.getElementById('styleBody').innerHTML='<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:10px;text-align:center;margin-bottom:6px"><div style="font-size:10px;color:rgba(160,152,140,.6);letter-spacing:2px;margin-bottom:3px">当前文风</div><div style="font-size:14px;color:rgba(238,232,218,.9);font-weight:500">'+esc(cur)+'</div></div><div style="font-size:10px;color:rgba(210,145,138,.75);text-align:center;margin-bottom:8px;line-height:1.5;padding:6px 8px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:7px">更换文风请在聊天框输入<br><span style="color:var(--go)">【文风更换为：文风名】</span></div><div style="display:flex;flex-direction:column;gap:3px">'+styles.map(function(s){var isCur=cur===s.n;return'<div style="padding:7px 9px;background:'+(isCur?'rgba(200,192,178,.06)':'rgba(255,255,255,.03)')+';border:1px solid '+(isCur?'rgba(200,192,178,.25)':'rgba(255,255,255,.07)')+';border-radius:7px"><div style="font-size:12px;color:rgba(238,232,218,.9)">'+s.n+(isCur?' ← 当前':'')+'</div><div style="font-size:10px;color:rgba(160,152,140,.5);margin-top:1px">'+s.d+'</div></div>';}).join('')+'</div>';};
 
 window.init_achieve=function(){
 var achs=JSON.parse(LS.getItem('wre_achv')||'[]');
